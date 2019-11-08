@@ -53,3 +53,21 @@ void desenharTiro(GLfloat x, GLfloat y) {
     glTranslatef(x,y,1.0);
   glPopMatrix ();
 }
+
+void desenhaParede(GLfloat win, GLfloat width_wall){
+    glBegin(GL_POLYGON);
+      glColor3f(0.11,0.38,0.09);
+      glVertex3f(-win,-win*2,1);
+      glVertex3f(-win,win*2,1);
+      glVertex3f(-win+width_wall,win*2,1);
+      glVertex3f(-win+width_wall,-win*2,1);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+      glColor3f(0.11,0.38,0.09);
+      glVertex3f(win,-win*2,1);
+      glVertex3f(win,win*2,1);
+      glVertex3f(win-width_wall,win*2,1);
+      glVertex3f(win-width_wall,-win*2,1);
+    glEnd();
+}
