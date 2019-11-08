@@ -14,8 +14,9 @@ GLfloat janelaY = 500;
 GLfloat win = 30;
 GLfloat anglex = 250.0;
 GLfloat panX = 0.0;
-GLfloat panY = 0.0;
+GLfloat panY = -25.0;
 //GLfloat posX = ;
+int tiro = 0;
 
 GLfloat pi = PI/360.0;
 
@@ -31,22 +32,35 @@ void init(void) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST); //habilita o teste de profundidade
+  glMatrixMode(GL_PROJECTION); //define que a matrix é a de projeção
+  glLoadIdentity(); //carrega a matrix de identidade
+  glOrtho((-win), (+win),
+          (-win), (+win),
+          (-win), (win));
+  // Ortho só deve ser setado uma vez, e nunca deve ser alterado
 }
 
 void aeronave(){
 
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(sin(anglex*pi)+cos(anglex*pi),1.0,cos(anglex*pi)-sin(anglex*pi),
+  //gluLookAt(sin(anglex*pi)+cos(anglex*pi),1.0,cos(anglex*pi)-sin(anglex*pi),
+  gluLookAt(0.0,0.5,1.0,
             0.0, 0.0, 0.0,   //para onde a câmera aponta (P_ref)
             0.0, 1.0, 0.0); //vetor view-up (V)
-  desenharAeronave();
+  desenharAeronave(panX, panY);
 
-  glMatrixMode(GL_PROJECTION); //define que a matrix é a de projeção
-  glLoadIdentity(); //carrega a matrix de identidade
-  glOrtho((-win+panX), (+win+panX),
-          (-win-panY), (+win-panY),
-          (-win), (win));
+  // TO DO: Para implementar o tiro se movendo e sumindo,
+  // precisaremos um vetor para guardar as posições de cada objeto
+  if(tiro){
+    desenharTiro(panX,panY+10.0);
+    if(dist(panX,panY+10.0, 15.0, panY+10.0)<3.5){
+      tiro = 0;
+    }
+    else{
+      printf("%f\n",dist(panX,panY+10.0, 15.0, 10.0));
+    }
+  }
 
 }
 
@@ -54,19 +68,22 @@ void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
 
   aeronave();
+  desenharInimigo(15.0, (panY+10.0));
 
   glutSwapBuffers();
 }
 
 void teclado(unsigned char key, int x, int y){
   anglex = acionarLetra(key, anglex);
-  // glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
+  
+  //glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
 }
 
 void controle(int key, int x, int y){
-  struct Coordenadas coordenadas = acionarSetas(key, panX, panY);
+  struct Coordenadas coordenadas = acionarSetas(key, panX, panY, win);
   panX = coordenadas.panX;
   panY = coordenadas.panY;
+  if(key == GLUT_KEY_UP) tiro = 1;
   // glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
 }
 
