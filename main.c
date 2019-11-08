@@ -16,6 +16,7 @@ GLfloat anglex = 250.0;
 GLfloat panX = 0.0;
 GLfloat panY = -25.0;
 //GLfloat posX = ;
+int tiro = 0;
 
 GLfloat pi = PI/360.0;
 
@@ -49,7 +50,17 @@ void aeronave(){
             0.0, 1.0, 0.0); //vetor view-up (V)
   desenharAeronave(panX, panY);
 
-
+  // TO DO: Para implementar o tiro se movendo e sumindo,
+  // precisaremos um vetor para guardar as posições de cada objeto
+  if(tiro){
+    desenharTiro(panX,panY+10.0);
+    if(dist(panX,panY+10.0, 15.0, panY+10.0)<3.5){
+      tiro = 0;
+    }
+    else{
+      printf("%f\n",dist(panX,panY+10.0, 15.0, 10.0));
+    }
+  }
 
 }
 
@@ -57,19 +68,22 @@ void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
 
   aeronave();
+  desenharInimigo(15.0, (panY+10.0));
 
   glutSwapBuffers();
 }
 
 void teclado(unsigned char key, int x, int y){
   anglex = acionarLetra(key, anglex);
-  // glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
+  
+  //glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
 }
 
 void controle(int key, int x, int y){
   struct Coordenadas coordenadas = acionarSetas(key, panX, panY, win);
   panX = coordenadas.panX;
   panY = coordenadas.panY;
+  if(key == GLUT_KEY_UP) tiro = 1;
   // glutPostRedisplay(); // remover caso a atualização seja apenas por tempo
 }
 
