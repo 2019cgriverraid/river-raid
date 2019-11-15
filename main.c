@@ -101,6 +101,10 @@ void display(void){
       aviao.tiros[i].x =-31.0;
     }
   }
+  if(dist(15.0,pos_inimigo, aviao.x, aviao.y) < 5){
+      pos_inimigo = 37.0;
+      aviao.x = 0.0;
+    }
   if(pos_inimigo < -30){
     pos_inimigo = 37.0;
   }
