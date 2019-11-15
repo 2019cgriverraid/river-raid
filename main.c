@@ -129,10 +129,12 @@ void controle(int key, int xx, int yy){
             //rY += 5;
             break;
         case GLUT_KEY_LEFT:
-            aviao.x -= 1.0; //movimenta o avião para a esquerda
+            if(aviao.x-4>-win+width_wall) 
+              aviao.x -= 1.0; //movimenta o avião para a esquerda
             break;
         case GLUT_KEY_RIGHT:
-            aviao.x += 1.0; //movimenta o avião para a direita
+            if(aviao.x+4<win-width_wall) 
+              aviao.x += 1.0; //movimenta o avião para a direita
             break;
     }
     glutPostRedisplay();
