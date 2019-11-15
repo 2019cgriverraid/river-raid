@@ -16,6 +16,9 @@ GLfloat panX = 0.0;
 GLfloat panY = -25.0;
 GLfloat width_wall = 9.0;
 
+GLfloat x0_inimigo = 0;
+GLfloat y0_inimigo = 500; // = janelaY
+
 int tiro = 0;
 int contTiro = 0;
 
@@ -28,7 +31,7 @@ const GLfloat light_position[] = { 0.5f, 5.0f, 2.0f, 0.0f };
 Aeronave aviao;
 
 void inicializaAeronave(){
-  aviao.x = 6.0;
+  aviao.x = 0.0;
   aviao.y = -25.0;
   aviao.rotX = 0.0;
   aviao.rotY = 0.0;
@@ -83,7 +86,8 @@ void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
 
   aeronave();
-  desenharInimigo(15.0, (panY+10.0));
+  //desenharInimigo(15.0, (panY+10.0));
+  desenharInimigo(15.0,-panY);
   desenhaParede(win,width_wall);
   glutSwapBuffers();
 }
@@ -113,7 +117,8 @@ void controleTiros(){
   aviao.tiros[contTiro].x = aviao.x;
   aviao.tiros[contTiro].y = -22.0;
   //aviao.tiros[contTiro].naTela = 1;
-  contTiro = (contTiro+1) % 10;
+  contTiro = (contTiro+1) % 30;     //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque 
+                                    //com % 10 eles somem no meio da tela
   tiro = 1;
 }
 
@@ -142,6 +147,7 @@ void controle(int key, int xx, int yy){
 
 void movimentarObjetosSecundarios () {
   for (int i = 0; i < 100; i++) {
+
     // procurar elementos dentro ?
     // diminuir o Y (aproximar do jogador) ?
   }
