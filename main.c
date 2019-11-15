@@ -42,6 +42,7 @@ void inicializaAeronave(){
   for(i=0; i<NUM_TIROS; i++){
     aviao.tiros[i].naTela = 0;
     aviao.tiros[i].y = -22;
+    aviao.tiros[i].x = -31;
   }
 }
 
@@ -58,6 +59,7 @@ void init(void) {
           (-win), (win));
   // Ortho só deve ser setado uma vez, e nunca deve ser alterado
   inicializaAeronave();
+  pos_inimigo = 25.0;
   //lighting(); //defininido os parâmetros de iluminação
 
   glGenTextures(1,&texture_id1);
@@ -92,7 +94,16 @@ void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
   aeronave();
   //desenharInimigo(15.0, (panY+10.0));
-  pos_inimigo = -panY + taxa_descida_inimigo;
+    int i;
+   for(i=0; i<NUM_TIROS; i++){
+    if(dist(15.0,pos_inimigo, aviao.tiros[i].x, aviao.tiros[i].y) < 5){
+      pos_inimigo = 37.0;
+      aviao.tiros[i].x =-31.0;
+    }
+  }
+  if(pos_inimigo < -30){
+    pos_inimigo = 37.0;
+  }
   desenharInimigo(15.0,pos_inimigo);
   glEnable(GL_TEXTURE_2D);
   desenhaParedeEsquerda(win,width_wall,texture_id1);
@@ -128,7 +139,7 @@ void controleTiros(){
   aviao.tiros[contTiro].y = -22.0;
   printf("%d: %f\n",contTiro, aviao.x );
   //aviao.tiros[contTiro].naTela = 1;
-  contTiro = (contTiro+1) % 30;     //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque 
+  contTiro = (contTiro+1) % NUM_TIROS;     //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque 
                                     //com % 10 eles somem no meio da tela
   tiro = 1;
   
@@ -172,11 +183,15 @@ void movimentarPorTempo (){
   movimentarObjetosSecundarios();
   // TODO calcular colisao
   // TODO
-  taxa_descida_inimigo -= 0.08;
+  pos_inimigo -= 0.08;
   if(tiro){
       int i;
       for(i=0; i<NUM_TIROS; i++){
           aviao.tiros[i].y += 0.2;
+          if(aviao.tiros[i].y > 30.0){
+            aviao.tiros[i].y = -30.0;
+            aviao.tiros[i].x = -31.0;
+          }
       }
   }
   
