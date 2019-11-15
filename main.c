@@ -5,6 +5,7 @@
 #include "util.c"
 #include "controle.c"
 #include "desenhos.c"
+#include "textura.c"
 
 int lastId = 0;
 GLfloat janelaX = 500;
@@ -24,11 +25,10 @@ GLfloat y0_inimigo = 500; // = janelaY
 int tiro = 0;
 int contTiro = 0;
 
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
-const GLfloat light_specular[] = { 2.0f, 2.0f, 2.0f, 2.0f };
-const GLfloat light_position[] = { 0.5f, 5.0f, 2.0f, 0.0f };
 
+
+
+GLuint texture_id1, texture_id2;
 //Objeto objetos[100];
 Aeronave aviao;
 
@@ -49,7 +49,7 @@ void init(void) {
   
   glClearColor(0.3f,0.0f,1.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+  glEnable(GL_SMOOTH);   
   glEnable(GL_DEPTH_TEST); //habilita o teste de profundidade
   glMatrixMode(GL_MODELVIEW); //define que a matrix é a de projeção
   glLoadIdentity(); //carrega a matrix de identidade
@@ -58,6 +58,10 @@ void init(void) {
           (-win), (win));
   // Ortho só deve ser setado uma vez, e nunca deve ser alterado
   inicializaAeronave();
+  //lighting(); //defininido os parâmetros de iluminação
+
+  glGenTextures(1,&texture_id1);
+
   glPushMatrix();
 }
 
@@ -86,12 +90,15 @@ void aeronave(){
 
 void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
-
   aeronave();
   //desenharInimigo(15.0, (panY+10.0));
   pos_inimigo = -panY + taxa_descida_inimigo;
   desenharInimigo(15.0,pos_inimigo);
-  desenhaParede(win,width_wall);
+  glEnable(GL_TEXTURE_2D);
+  desenhaParedeEsquerda(win,width_wall,texture_id1);
+  desenhaParedeDireita(win,width_wall,texture_id1);
+  desenhaAgua(win,width_wall,texture_id2);
+  glDisable(GL_TEXTURE_2D);
   glutSwapBuffers();
 }
 
@@ -172,14 +179,6 @@ void movimentarPorTempo (){
           aviao.tiros[i].y += 0.2;
       }
   }
-
-  /*int i = 0;
-  for(i = 0; i < contTiro; i++){
-      if(pos_inimigo == aviao.tiros[i].y)
-        //como detectar colisao? 
-  }*/
-  
-
   
 
   glutPostRedisplay();
@@ -192,13 +191,21 @@ int  main(int argc, char** argv){
   glutInitWindowSize(janelaX, janelaY);
   glutInitWindowPosition(300 ,100);
   glutCreateWindow("River Raid 3D");
-
   init();
+  CarregaTextura("grama.bmp",texture_id1);
+  CarregaTextura("agua.bmp",texture_id2);
+
+  /*SetupRC();
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);*/
 
   glutDisplayFunc(display);
   glutKeyboardFunc(teclado);
   glutSpecialFunc(controle);
   glutTimerFunc(10, movimentarPorTempo, 1);
+
+  
+
   glutMainLoop();
 
   return 0;
