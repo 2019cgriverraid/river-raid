@@ -16,7 +16,7 @@ typedef struct Aeronave{
   GLfloat y;
   GLfloat rotX;
   GLfloat rotY;
-  Tiros tiros[30];
+  Tiros tiros[NUM_TIROS];
 }Aeronave;
 
 typedef struct Coordenadas{
@@ -73,6 +73,7 @@ void remove(Lista *lista){
 }*/
 
 float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy){
-    printf("px %2f qx %2f py %2f qy %2f \n", px, qx, py, qy);
+    printf("px %2f py %2f qx %2f qy %2f \n", px, py, qx, qy);
+    printf("dist %f\n", sqrt(pow((px - qx), 2) + pow((py - qy), 2)) );
     return sqrt(pow((px - qx), 2) + pow((py - qy), 2));
 }
