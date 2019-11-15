@@ -15,6 +15,8 @@ GLfloat anglex = 250.0;
 GLfloat panX = 0.0;
 GLfloat panY = -25.0;
 GLfloat width_wall = 9.0;
+GLfloat taxa_descida_inimigo = 0;
+GLfloat pos_inimigo = 0;
 
 GLfloat x0_inimigo = 0;
 GLfloat y0_inimigo = 500; // = janelaY
@@ -87,7 +89,8 @@ void display(void){
 
   aeronave();
   //desenharInimigo(15.0, (panY+10.0));
-  desenharInimigo(15.0,-panY);
+  pos_inimigo = -panY + taxa_descida_inimigo;
+  desenharInimigo(15.0,pos_inimigo);
   desenhaParede(win,width_wall);
   glutSwapBuffers();
 }
@@ -116,10 +119,12 @@ void teclado(unsigned char key, int x, int y){
 void controleTiros(){
   aviao.tiros[contTiro].x = aviao.x;
   aviao.tiros[contTiro].y = -22.0;
+  printf("%d: %f\n",contTiro, aviao.x );
   //aviao.tiros[contTiro].naTela = 1;
   contTiro = (contTiro+1) % 30;     //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque 
                                     //com % 10 eles somem no meio da tela
   tiro = 1;
+  
 }
 
 void controle(int key, int xx, int yy){
@@ -128,12 +133,14 @@ void controle(int key, int xx, int yy){
   panY = coordenadas.panY;*/
   switch(key){
         case GLUT_KEY_UP:
+            
             controleTiros();
             break;
         case GLUT_KEY_DOWN:
             //rY += 5;
             break;
         case GLUT_KEY_LEFT:
+
             if(aviao.x-4>-win+width_wall) 
               aviao.x -= 1.0; //movimenta o avião para a esquerda
             break;
@@ -158,13 +165,23 @@ void movimentarPorTempo (){
   movimentarObjetosSecundarios();
   // TODO calcular colisao
   // TODO
-
+  taxa_descida_inimigo -= 0.08;
   if(tiro){
       int i;
       for(i=0; i<NUM_TIROS; i++){
           aviao.tiros[i].y += 0.2;
       }
   }
+
+  /*int i = 0;
+  for(i = 0; i < contTiro; i++){
+      if(pos_inimigo == aviao.tiros[i].y)
+        //como detectar colisao? 
+  }*/
+  
+
+  
+
   glutPostRedisplay();
 	glutTimerFunc(10, movimentarPorTempo, 1);
 }
