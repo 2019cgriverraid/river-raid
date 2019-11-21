@@ -151,9 +151,16 @@ void display(void){
     glDisable(GL_TEXTURE_2D);
   }
   else{ // TELA AZUL
-    if(auxTempo == 0.0) printf("fim de jogo\n");
+    if(auxTempo == 1.0){
+      printf("fim de jogo\n");
+      inicializaAeronave();
+      removerTudo(&objetos);
+    }
     if(auxTempo<100) auxTempo+=1;
-    else fimDeJogo = 0;
+    else{
+      fimDeJogo = 0;
+      auxTempo = 0.0;
+    } 
   }
   glutSwapBuffers();
 }
@@ -241,24 +248,26 @@ void movimentarObjetosSecundarios () {
 // Executa a cada 10ms inicialmente, cria e movimenta os objetos, além de verificar a colisão
 // TO DO: fazer variar o tempo de acordo com o nivel que o jogador está
 void movimentarPorTempo (){
-  tempoCriaObjetos += 1;
-  //printf("%d\n", tempoCriaObjetos);
-  
-  criarObjetosSecundarios();
-  movimentarObjetosSecundarios();
-  verificarColisao();
-  
-  if(tiro){
-      int i;
-      for(i=0; i<NUM_TIROS; i++){
-          aviao.tiros[i].y += 0.4;
-          if(aviao.tiros[i].y > 30.0){
-            aviao.tiros[i].y = -30.0;
-            aviao.tiros[i].x = -31.0;
-          }
-      }
+  if(!fimDeJogo){
+    tempoCriaObjetos += 1;
+    //printf("%d\n", tempoCriaObjetos);
+    
+    criarObjetosSecundarios();
+    movimentarObjetosSecundarios();
+    verificarColisao();
+    
+    if(tiro){
+        int i;
+        for(i=0; i<NUM_TIROS; i++){
+            aviao.tiros[i].y += 0.4;
+            if(aviao.tiros[i].y > 30.0){
+              aviao.tiros[i].y = -30.0;
+              aviao.tiros[i].x = -31.0;
+            }
+        }
+    }
+    
   }
-  
   glutPostRedisplay();
 	glutTimerFunc(tempoRolagem, movimentarPorTempo, 1);
 }

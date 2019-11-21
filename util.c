@@ -55,12 +55,12 @@ void imprimeLista(Lista *lista){
 int verificarUnicidadeCoordenadas(Lista *lista, float x, float y){
 
   if(lista->inicio != NULL){
-    Objeto *percorre = lista->inicio;
-    while(percorre != NULL){
-      if(percorre->posX == x && percorre->posY == y){
+    Objeto *p = lista->inicio;
+    while(p != NULL){
+      if(p->posX == x && p->posY == y){
         return 0; //já existe objeto com a mesma posição (é meio impossivel, função tá inutil)
       }
-      percorre = percorre->prox;
+      p = p->prox;
     }
   }
   return 1; //posição é unica
@@ -93,18 +93,31 @@ void inserir(Lista *lista, int winX, int winY, int width_wall){
 // Remove o objeto que tem as posições enviadas por parâmetro da lista de objetos
 void remover(Lista *lista, int posX, int posY){
   if(lista->inicio != NULL){
-    Objeto *percorre = lista->inicio;
+    Objeto *p = lista->inicio;
 
-    while(percorre != NULL){ //procura o objeto para remoção
-      if(percorre->posX == posX && percorre->posY == 37.0){
-        percorre->ant->prox = percorre->prox;
-        percorre->prox->ant = percorre->ant;
-        free(percorre);
+    while(p != NULL){ //procura o objeto para remoção
+      if(p->posX == posX && p->posY == 37.0){
+        if(p->prox != NULL && p->ant != NULL){
+          p->ant->prox = p->prox;
+          p->prox->ant = p->ant;
+        }
+        if(p == lista->inicio) lista->inicio = NULL;
+        free(p);
         return;
       }
-      percorre = percorre->prox;
+      p = p->prox;
     }
   }
+}
+
+void removerTudo(Lista *lista){
+  Objeto *p = lista->inicio;
+  while(p != NULL){
+    remover(lista, p->posX, p->posY);
+    p = p->prox;
+  }
+  lista->inicio = NULL;
+  lista->fim = NULL;
 }
 
 // Calcula a distância entre dois pontos (px, py) e (qx, qy)
