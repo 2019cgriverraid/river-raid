@@ -17,12 +17,8 @@ typedef struct Aeronave{
   GLfloat rotX;
   GLfloat rotY;
   Tiros tiros[NUM_TIROS];
+  GLint pontuacao;
 }Aeronave;
-
-typedef struct Coordenadas{
-  GLfloat panX;
-  GLfloat panY;
-}Coordenadas;
 
 typedef struct Objeto{
   GLfloat posX;
@@ -91,12 +87,12 @@ void inserir(Lista *lista, int winX, int winY, int width_wall){
 }
 
 // Remove o objeto que tem as posições enviadas por parâmetro da lista de objetos
-void remover(Lista *lista, int posX, int posY){
+void remover(Lista *lista, int posX, int posY, int winY){
   if(lista->inicio != NULL){
     Objeto *p = lista->inicio;
 
     while(p != NULL){ //procura o objeto para remoção
-      if(p->posX == posX && p->posY == 37.0){
+      if(p->posX == posX && p->posY == (winY + 7.0)){
         if(p->prox != NULL && p->ant != NULL){
           p->ant->prox = p->prox;
           p->prox->ant = p->ant;
@@ -110,10 +106,10 @@ void remover(Lista *lista, int posX, int posY){
   }
 }
 
-void removerTudo(Lista *lista){
+void removerTudo(Lista *lista, int winY){
   Objeto *p = lista->inicio;
   while(p != NULL){
-    remover(lista, p->posX, p->posY);
+    remover(lista, p->posX, p->posY, winY);
     p = p->prox;
   }
   lista->inicio = NULL;
