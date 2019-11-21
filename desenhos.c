@@ -64,24 +64,78 @@ void desenhaTiro(){
    glEnd();
 }
 
+void desenharPostoCombustivel(GLfloat x, GLfloat y){
+   glPushMatrix ();
+
+      glColor3f(1.0,0.0,0.0);
+
+      GLfloat tam = 4.0;
+
+      glTranslatef(x, y, 0.0);
+
+      glBegin(GL_POLYGON);
+         glVertex3f(-tam,-tam,tam);
+         glVertex3f(tam,-tam,tam);
+         glVertex3f(tam,tam,tam);
+         glVertex3f(-tam,tam,tam);
+      glEnd();
+      
+      glBegin(GL_POLYGON);
+         glVertex3f(tam,tam,tam);
+         glVertex3f(tam,-tam,tam);
+         glVertex3f(tam,-tam,-tam);
+         glVertex3f(tam,tam,-tam);
+      glEnd();
+
+      glBegin(GL_POLYGON);
+         glVertex3f(tam,-tam,tam);
+         glVertex3f(-tam,-tam,tam);
+         glVertex3f(-tam,-tam,-tam);
+         glVertex3f(tam,-tam,-tam);
+      glEnd();
+
+      glBegin(GL_POLYGON);
+         glVertex3f(-tam,tam,tam);
+         glVertex3f(tam,tam,tam);
+         glVertex3f(tam,tam,-tam);
+         glVertex3f(-tam,tam,-tam);
+      glEnd();
+
+      glBegin(GL_POLYGON);
+         glVertex3f(-tam,-tam,-tam);
+         glVertex3f(-tam,tam,-tam);
+         glVertex3f(tam,tam,-tam);
+         glVertex3f(tam,-tam,-tam);
+      glEnd();
+
+      glBegin(GL_POLYGON);
+         glVertex3f(-tam,tam,-tam);
+         glVertex3f(-tam,-tam,-tam);
+         glVertex3f(-tam,-tam,tam);
+         glVertex3f(-tam,tam,tam);
+      glEnd();
+
+   glPopMatrix();
+}
+
 void desenharInimigo(GLfloat x, GLfloat y) {
-  glPushMatrix ();
+  glPushMatrix();
   
   glBegin(GL_TRIANGLE_FAN);
-  glColor3f(0.65,0.0,0.0);
-  glVertex3f(0.0+x,-3.0+y,0.0);
+   glColor3f(0.65,0.0,0.0);
+   glVertex3f(0.0+x,-3.0+y,0.0);
 
-  glColor3f(1.0,0.0,0.0);
-  glVertex3f(-4.0+x,3.0+y,0.0);
+   glColor3f(1.0,0.0,0.0);
+   glVertex3f(-4.0+x,3.0+y,0.0);
 
-  glColor3f(0.4,0.0,0.0);
-  glVertex3f(4.0+x,3.0+y,0.0);
+   glColor3f(0.4,0.0,0.0);
+   glVertex3f(4.0+x,3.0+y,0.0);
 
-  glColor3f(0.4,0.0,0.0);
-  glVertex3f(0.0+x,3.0+y,-4.0);
+   glColor3f(0.4,0.0,0.0);
+   glVertex3f(0.0+x,3.0+y,-4.0);
 
-  glColor3f(0.4,0.0,0.0);
-  glVertex3f(-4.0+x,3.0+y,0.0);
+   glColor3f(0.4,0.0,0.0);
+   glVertex3f(-4.0+x,3.0+y,0.0);
   glEnd();
   glPopMatrix ();
 }
