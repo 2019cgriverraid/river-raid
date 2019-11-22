@@ -56,6 +56,7 @@ void imprimeLista(Lista *lista)
     }
 }
 
+float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy);
 // Verificar se o mesmo objeto nao esta sendo colocado no mesmo lugar que outro já existente
 int verificarUnicidadeCoordenadas(Lista *lista, float x, float y)
 {
@@ -65,7 +66,7 @@ int verificarUnicidadeCoordenadas(Lista *lista, float x, float y)
         Objeto *p = lista->inicio;
         while (p != NULL)
         {
-            if (p->posX == x && p->posY == y)
+            if (dist(p->posX, p->posY, x, y)<5.0)
             {
                 return 0; //já existe objeto com a mesma posição (é meio impossivel, função tá inutil)
             }
