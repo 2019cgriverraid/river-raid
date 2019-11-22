@@ -1,22 +1,59 @@
 #include <GL/glut.h>
 
 void desenhaAeronave(){
-   glBegin(GL_TRIANGLE_FAN);
-      glColor3f(1.0,0.0,0.0);
-      glVertex3f(0.0,3.0,0.0);
+    
+    GLfloat asa[][3]={
+        {-4.0,0.0,0.0},
+        {+4.0,0.0,0.0},
+        {0.0,0.0,3.0}
+    };
 
-      glColor3f(0.0,1.0,0.0);
-      glVertex3f(-4.0,-3.0,0.0);
+    GLfloat cauda[][3]={
+        {0.0,0.5,0.0},
+        {0.0,2.0,0.0},
+        {0.0,1.6,0.9},
+        {0.0,0.0,2.0}
+    };
 
-      glColor3f(0.0,0.0,1.0);
-      glVertex3f(4.0,-3.0,0.0);
+    GLUquadricObj *quadric;
+    glColor3f(1.0,1.0,1.0);
 
-      glColor3f(1.0,0.0,1.0);
-      glVertex3f(0.0,-3.0,4.0);
+    //asas
+    glPushMatrix();
+        glRotatef(90, 1.0, 0.0, 0.0);
+        glTranslatef(0,0,2);
+        glBegin(GL_TRIANGLES); 
+            glVertex3fv(asa[0]);
+            glVertex3fv(asa[1]);
+            glVertex3fv(asa[2]);
+        glEnd();
+    glPopMatrix();
 
-      glColor3f(1.0,1.0,0.0);
-      glVertex3f(-4.0,-3.0,0.0);
-   glEnd();
+    //cauda
+    glPushMatrix();
+        glTranslatef(0,-5.5,0.6);
+        glBegin(GL_POLYGON); 
+            glVertex3fv(cauda[0]);
+            glVertex3fv(cauda[1]);
+            glVertex3fv(cauda[2]);
+            glVertex3fv(cauda[3]);
+        glEnd();
+    glPopMatrix();
+
+    //corpo
+    glPushMatrix();
+        glRotatef(90, 1.0, 0.0, 0.0);
+        quadric = gluNewQuadric();
+        gluCylinder(quadric, 0.6, 0.9, 5.5, 12, 3);
+    glPopMatrix();
+
+    //cockpit
+    glPushMatrix();
+        //glTranslatef(0,6,0);
+        glRotatef(-90, 1.0, 0.0, 0.0);
+        glutSolidCone(0.6, 1.2, 15, 15);
+    glPopMatrix(); 
+
 }
 
 void desenhaTiro(){
