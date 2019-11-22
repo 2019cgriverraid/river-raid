@@ -38,10 +38,13 @@ GLuint texture_id1, texture_id2;
 Lista objetos;
 Aeronave aviao;
 
+GLint auxRot;
+GLint auxQtdRot;
+
 // Define posições iniciais da Aeronave e dos tiros
 void inicializaAeronave(){
     aviao.x = 0.0;
-    aviao.y = -win + 5.0;
+    aviao.y = -win + 7.0;
     aviao.rotX = 0.0;
     aviao.rotY = 0.0;
     aviao.pontuacao = 0;
@@ -93,10 +96,9 @@ void aeronave(){
     //glLoadIdentity();
 
     glPushMatrix();
-    glTranslatef(aviao.x, aviao.y, 0.0); //leva o avião para baixo na tela
-    glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o avião para os lados em direção ao eixo x quando ele se movimentar
-    //glRotatef(aviao.rotY,1,0,0);
-    desenhaAeronave();
+        glTranslatef(aviao.x, aviao.y, 0.0); //leva o avião para baixo na tela
+        glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o avião para os lados em direção ao eixo x quando ele se movimentar
+        desenhaAeronave();
     glPopMatrix();
 
     if (tiro){
@@ -249,13 +251,18 @@ void controle(int key, int xx, int yy){
     case GLUT_KEY_LEFT:
         if (aviao.x - 4 <= -win + width_wall + 0.5)
             fimDeJogo = 1;
-        else
+        else{
             aviao.x -= 1.3; //movimenta o avião para a esquerda
+            aviao.rotX = aviao.rotX-3.5 <= -28 ? -28: aviao.rotX-3.5;
+        }
         break;
     case GLUT_KEY_RIGHT:
         if (aviao.x + 4 >= win - width_wall - 0.5)
             fimDeJogo = 1;
-        aviao.x += 1.3; //movimenta o avião para a direita
+        else{
+            aviao.x += 1.3; //movimenta o avião para a direita
+            aviao.rotX = aviao.rotX+3.5 >= 28 ? 28: aviao.rotX+3.5;
+        }
         break;
     }
     glutPostRedisplay();
@@ -304,6 +311,18 @@ void movimentarPorTempo(){
             criarObjetosSecundarios();
             movimentarObjetosSecundarios();
             verificarColisao();
+
+            if(aviao.rotX == auxRot) auxQtdRot++;
+            else{
+                auxQtdRot = 0;
+                auxRot = aviao.rotX;
+            }
+            if(aviao.rotX != 0 && auxQtdRot >= 10){
+                if(auxRot < 0)
+                    aviao.rotX += 7;
+                else
+                    aviao.rotX -= 7;
+            }
 
             if (tiro){
                 int i;
