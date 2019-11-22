@@ -149,44 +149,44 @@ void desenharTiro(GLfloat x, GLfloat y) {
   glPopMatrix ();
 }
 
-void desenhaParedeEsquerda(GLfloat win, GLfloat width_wall, GLuint texture_id){
+void desenhaParedeEsquerda(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
    glPushMatrix();
       glBindTexture ( GL_TEXTURE_2D, texture_id );
       glBegin(GL_POLYGON);
          glColor3f(0.0,1.0,0.0);
-         glTexCoord2f(0.0f, 0.0f); glVertex3f(-win,-win*2,1);
-         glTexCoord2f(1.0f, 0.0f);  glVertex3f(-win,win*2,1);
-         glTexCoord2f(0.0f, 1.0f); glVertex3f(-win+width_wall,win*2,1);
-         glTexCoord2f(1.0f, 1.0f); glVertex3f(-win+width_wall,-win*2,1);
+         glTexCoord2f(0.0f, 0.0f); glVertex3f(-win,-win*4-y,1);
+         glTexCoord2f(1.0f, 0.0f);  glVertex3f(-win,win*4-y,1);
+         glTexCoord2f(0.0f, 1.0f); glVertex3f(-win+width_wall,win*4-y,1);
+         glTexCoord2f(1.0f, 1.0f); glVertex3f(-win+width_wall,-win*4-y,1);
       glEnd();
    glPopMatrix();
 }
 
 
-void desenhaParedeDireita(GLfloat win, GLfloat width_wall, GLuint texture_id){
+void desenhaParedeDireita(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
    glPushMatrix();
       glEnable(GL_TEXTURE_2D);
       glBindTexture ( GL_TEXTURE_2D, texture_id );
       glBegin(GL_POLYGON);
             glColor3f(0.0,1.0,0.0);
-            glTexCoord2f(0.0f, 0.0f); glVertex3f(win,-win*2,-1);
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(win,win*2,-1);
-            glTexCoord2f(0.0f, 1.0f); glVertex3f(win-width_wall,win*2,-1);
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(win-width_wall,-win*2,-1);
+            glTexCoord2f(0.0f, 0.0f); glVertex3f(win,-win*4-y,-1);
+            glTexCoord2f(1.0f, 0.0f); glVertex3f(win,win*4-y,-1);
+            glTexCoord2f(0.0f, 1.0f); glVertex3f(win-width_wall,win*4-y,-1);
+            glTexCoord2f(1.0f, 1.0f); glVertex3f(win-width_wall,-win*4-y,-1);
       glEnd();
    glPopMatrix();
 }
 
-void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id){
+void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
    glPushMatrix();
       glEnable(GL_TEXTURE_2D);
       glBindTexture ( GL_TEXTURE_2D, texture_id );
       glBegin(GL_POLYGON);
             glColor3f(0.0,0.0,0.88);
-            glTexCoord2f(0.0f, 0.0f); glVertex3f(win-width_wall+1,-win*2,-1);
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(win-width_wall+1,win*2,-1);
-            glTexCoord2f(0.0f, 1.0f); glVertex3f(-win+width_wall-1,win*2,-1);
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-win+width_wall-1,-win*2,-1);
+            glTexCoord2f(0.0f, 0.0f); glVertex3f(win-width_wall+1,-win*4-y,-1);
+            glTexCoord2f(1.0f, 0.0f); glVertex3f(win-width_wall+1,win*4-y,-1);
+            glTexCoord2f(0.0f, 1.0f); glVertex3f(-win+width_wall-1,win*4-y,-1);
+            glTexCoord2f(1.0f, 1.0f); glVertex3f(-win+width_wall-1,-win*4-y,-1);
       glEnd();
    glPopMatrix();
 }

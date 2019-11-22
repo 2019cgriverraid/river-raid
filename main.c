@@ -12,8 +12,9 @@ GLfloat janelaX = 500;
 GLfloat janelaY = 500;
 
 GLfloat win = 50;
+GLfloat scenicMove = 0.0;
 GLfloat anglex = 250.0;
-GLfloat width_wall = 13.0;
+GLfloat width_wall = 9.0;
 
 int tiro = 0;
 int contTiro = 0;
@@ -173,9 +174,9 @@ void display(void){
     if (!fimDeJogo){ // desenha objetos na tela
 
         glEnable(GL_TEXTURE_2D);
-        desenhaParedeEsquerda(win, width_wall, texture_id1);
-        desenhaParedeDireita(win, width_wall, texture_id1);
-        desenhaAgua(win, width_wall, texture_id2);
+        desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
+        desenhaParedeDireita(win, width_wall, texture_id1,scenicMove);
+        desenhaAgua(win, width_wall, texture_id2,scenicMove);
         glDisable(GL_TEXTURE_2D);
         
         desenharObjetos();
@@ -314,7 +315,10 @@ void movimentarPorTempo(){
                     }
                 }
             }
+            scenicMove = (scenicMove + 0.1);
+            if(scenicMove>(win*1.25)) scenicMove = 0.0;
         }
+
     }
     glutPostRedisplay();
     glutTimerFunc(tempoRolagem, movimentarPorTempo, 1);
