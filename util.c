@@ -85,7 +85,7 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
     do
     {
         novo->posX = (rand() % (2 * winX - 2 * width_wall)) - winX + width_wall; //calcula pra setar uma posição x aleatória dentro da parte azul
-        novo->posY = winY;
+        novo->posY = winY+7.0;
         //novo->tipo = //será definido o tipo do objeto, para que saibamos qual é a dimensão considerada para a colisão
     } while (!verificarUnicidadeCoordenadas(lista, novo->posX, novo->posY));
 

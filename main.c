@@ -13,7 +13,7 @@ GLfloat janelaY = 500;
 
 GLfloat win = 50;
 GLfloat anglex = 250.0;
-GLfloat width_wall = 9.0;
+GLfloat width_wall = 13.0;
 
 int tiro = 0;
 int contTiro = 0;
@@ -61,11 +61,20 @@ void init(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);    //habilita o teste de profundidade
-    glMatrixMode(GL_MODELVIEW); //define que a matrix é a de projeção
+    
+
+    glMatrixMode(GL_PROJECTION); //define que a matrix é a de projeção
     glLoadIdentity();           //carrega a matrix de identidade
     glOrtho((-win), (+win),
             (-win), (+win),
             (-win), (win));
+
+    glMatrixMode(GL_MODELVIEW);
+     gluLookAt(0.0,0.5,1.0,
+             0.0, 0.0, 0.0,   //para onde a câmera aponta (P_ref)
+             0.0, 1.0, 0.0);
+
+
     // Ortho só deve ser setado uma vez, e nunca deve ser alterado
 
     inicializaAeronave();
@@ -111,7 +120,7 @@ void verificarColisao(){
             // Checa colisão do tiro
             if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 4){
 
-                p->posY = win + 7.0; // seta posição y fixa para remoção
+                p->posY = win + 13.0; // seta posição y fixa para remoção
                 remover(&objetos, p->posY, p->posX, win);
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
 
@@ -138,7 +147,7 @@ void verificarColisao(){
 
         // Checa se o objeto não passou da fronteira inferior da janela
         if (p->posY < -win)
-            p->posY = win + 7.0; // seta posição y fixa para remoção
+            p->posY = win + 13.0; // seta posição y fixa para remoção
 
         p = p->prox;
     }
@@ -271,7 +280,7 @@ void movimentarObjetosSecundarios(){
 
     while (p != NULL)
     {
-        if (p->posY != (win + 7.0))
+        if (p->posY != (win + 13.0))
             p->posY -= 0.2;
         p = p->prox;
     }

@@ -3,19 +3,19 @@
 void desenhaAeronave(){
    glBegin(GL_TRIANGLE_FAN);
       glColor3f(1.0,0.0,0.0);
-      glVertex3f(0.0,3.0,0.0);
+      glVertex3f(0.0,3.0,2.0);
 
       glColor3f(0.0,1.0,0.0);
-      glVertex3f(-4.0,-3.0,0.0);
+      glVertex3f(-4.0,-3.0,2.0);
 
       glColor3f(0.0,0.0,1.0);
-      glVertex3f(4.0,-3.0,0.0);
+      glVertex3f(4.0,-3.0,2.0);
 
       glColor3f(1.0,0.0,1.0);
-      glVertex3f(0.0,-3.0,4.0);
+      glVertex3f(0.0,-3.0,6.0);
 
       glColor3f(1.0,1.0,0.0);
-      glVertex3f(-4.0,-3.0,0.0);
+      glVertex3f(-4.0,-3.0,2.0);
    glEnd();
 }
 
@@ -123,19 +123,19 @@ void desenharInimigo(GLfloat x, GLfloat y) {
   
   glBegin(GL_TRIANGLE_FAN);
    glColor3f(0.65,0.0,0.0);
-   glVertex3f(0.0+x,-3.0+y,0.0);
+   glVertex3f(0.0+x,-3.0+y,6.0);
 
    glColor3f(1.0,0.0,0.0);
-   glVertex3f(-4.0+x,3.0+y,0.0);
+   glVertex3f(-4.0+x,3.0+y,6.0);
 
    glColor3f(0.4,0.0,0.0);
-   glVertex3f(4.0+x,3.0+y,0.0);
+   glVertex3f(4.0+x,3.0+y,6.0);
 
    glColor3f(0.4,0.0,0.0);
-   glVertex3f(0.0+x,3.0+y,-4.0);
+   glVertex3f(0.0+x,3.0+y,2.0);
 
    glColor3f(0.4,0.0,0.0);
-   glVertex3f(-4.0+x,3.0+y,0.0);
+   glVertex3f(-4.0+x,3.0+y,6.0);
   glEnd();
   glPopMatrix ();
 }
