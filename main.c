@@ -25,7 +25,7 @@ const GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
 int tiro = 0;
 int timerTiro = 0;
-int intervaloTiro = 40;
+int intervaloTiro = 48;
 int contTiro = 0;
 
 int fimDeJogo = 0;
@@ -140,7 +140,7 @@ void verificarColisao(){
 
             // Checa colisão do tiro
             if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 4){
-
+                timerTiro = 0;
                 p->posY = win + LIXO; // seta posição y fixa para remoção
                 remover(&objetos, p->posX, win);
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
@@ -392,8 +392,8 @@ void movimentarPorTempo(){
             if (tiro){
                 int i;
                 for (i = 0; i < NUM_TIROS; i++){
-                    aviao.tiros[i].y += 0.8;
-                    if (aviao.tiros[i].y > win){
+                    aviao.tiros[i].y += 1.6;
+                    if (aviao.tiros[i].y > win+10){
                         aviao.tiros[i].y = -win;
                         aviao.tiros[i].x = -win - 5.0;
                     }
@@ -405,13 +405,13 @@ void movimentarPorTempo(){
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - NIVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
         tempoNivel += 1;
-        if ((tempoNivel%1050)==0){
+        if ((tempoNivel%650)==0){
             tempoNivel = 0;
             
             if (nivel < 7){
                 nivel += 1;
-                if(nivel > 2){
-                    horaDoCombustivel = intervaloDoCombustivel + ((nivel-2)*15);
+                if(nivel > 3){
+                    horaDoCombustivel = intervaloDoCombustivel + ((nivel-3)*15);
                 }
             }
         }

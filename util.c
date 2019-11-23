@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define NUM_TIROS 3
+#define NUM_TIROS 4
 #define LIXO 20.0 
 #define pi (3.14159265 / 360.0)
 
