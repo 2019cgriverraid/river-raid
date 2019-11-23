@@ -66,6 +66,7 @@ void inicializaAeronave(){
     auxRot = 0;
     auxQtdRot = 0;
     combRecente = 0;
+    tempoAuxComb = 0;
 
     int i;
     for (i = 0; i < NUM_TIROS; i++){
