@@ -309,6 +309,22 @@ void movimentarObjetosSecundarios(){
     {
         if (p->posY != (win + 13.0))
             p->posY -= 0.2;
+        if(p->tipo ==1){
+            if(!p->specialMov){
+                p->movDist = p->movDist + 0.2;
+                p->posX = p->posX + 0.2;
+                if(p->movDist > 7 || p->posX >= (win- width_wall)){
+                    p->specialMov = 1;
+                }
+            }
+            else{
+                p->movDist = p->movDist - 0.2;
+                p->posX = p->posX - 0.2;
+                if(p->movDist < 1 || p->posX <= (-win+ width_wall) ){
+                    p->specialMov = 0;
+                }
+            }
+        }
         p = p->prox;
     }
 }
