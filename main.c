@@ -7,6 +7,11 @@
 #include "desenhos.c"
 #include "textura.c"
 
+const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
+const GLfloat light_specular[] = { 2.0f, 2.0f, 2.0f, 2.0f };
+const GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
+
 int lastId = 0;
 GLfloat janelaX = 500;
 GLfloat janelaY = 500;
@@ -23,7 +28,7 @@ int fimDeJogo = 0;
 
 float auxTempo = 0.0;
 
-int horaDoCombustivel = 500; 
+int horaDoCombustivel = 300; 
 int tempoAuxComb = 0;
 int intervaloEntreComb = 500;
 
@@ -38,8 +43,9 @@ GLuint texture_id1, texture_id2;
 Lista objetos;
 Aeronave aviao;
 
-GLint auxRot;
-GLint auxQtdRot;
+GLint auxRot = 0;
+GLint auxQtdRot = 0;
+GLint combRecente = 0;
 
 // Define posições iniciais da Aeronave e dos tiros
 void inicializaAeronave(){
@@ -49,6 +55,10 @@ void inicializaAeronave(){
     aviao.rotY = 0.0;
     aviao.pontuacao = 0;
     aviao.combustivel = 30;
+
+    auxRot = 0;
+    auxQtdRot = 0;
+    combRecente = 0;
 
     int i;
     for (i = 0; i < NUM_TIROS; i++){
@@ -145,8 +155,11 @@ void verificarColisao(){
             fimDeJogo = 1; // Jogo acaba se sim
 
         // Checa se passou por posto de combustível
-        if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4)
-            aviao.combustivel = (aviao.combustivel + 3) > 30 ? 30 : aviao.combustivel + 3;
+        if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4 && combRecente == 0){
+            aviao.combustivel = (aviao.combustivel + 3) > 30 ? 30 : aviao.combustivel + 4;
+            combRecente = 1;
+        }
+
 
         // Checa se o objeto não passou da fronteira inferior da janela
         if (p->posY < -win)
@@ -299,7 +312,6 @@ void movimentarObjetosSecundarios(){
 void movimentarPorTempo(){
     if (!fimDeJogo)
     {
-        printf("tempo: %d, %d\n", tempoAuxComb, aviao.combustivel);
         if(aviao.combustivel <= 0)
             fimDeJogo = 1;
 
@@ -307,6 +319,8 @@ void movimentarPorTempo(){
             tempoAuxObstaculo++;
             tempoAuxComb++;
             if(!(tempoAuxComb % 50)) aviao.combustivel--;
+            if(!(tempoAuxComb % 100)) combRecente = 0;
+                
 
             criarObjetosSecundarios();
             movimentarObjetosSecundarios();
@@ -335,9 +349,10 @@ void movimentarPorTempo(){
                 }
             }
             scenicMove = (scenicMove + 0.1);
-            if(scenicMove>(win*1.25)) scenicMove = 0.0;
+            if(scenicMove>(win*1.25)) scenicMove = 0.0;    
+        
+            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d\n", tempoAuxComb, aviao.combustivel, aviao.pontuacao);
         }
-
     }
     glutPostRedisplay();
     glutTimerFunc(tempoRolagem, movimentarPorTempo, 1);
@@ -357,6 +372,18 @@ int main(int argc, char **argv){
     /*SetupRC();
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);*/
+
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
 
     glutDisplayFunc(display);
     glutKeyboardFunc(teclado);
