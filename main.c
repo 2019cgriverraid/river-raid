@@ -34,7 +34,8 @@ float auxTempo = 0.0;
 long tempoNivel = 0;
 int nivel = 1;
 
-int horaDoCombustivel = 300; 
+int horaDoCombustivel = 285; 
+int intervaloDoCombustivel = 285; 
 int tempoAuxComb = 0;
 
 
@@ -162,7 +163,7 @@ void verificarColisao(){
 
         // Checa se passou por posto de combustível
         if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
-            aviao.combustivel = (aviao.combustivel + 7) > 30 ? 30 : aviao.combustivel + 7;
+            aviao.combustivel = (aviao.combustivel + 6) > 30 ? 30 : aviao.combustivel + 6;
             combRecente = 1;
         }
 
@@ -181,10 +182,12 @@ void desenharObjetos(){
     Objeto *p = objetos.inicio;
 
     while (p != NULL){
-        if (p->tipo == 0)
-            desenharPostoCombustivel(p->posX, p->posY);
-        else if (p->tipo == 1)
-            desenharInimigo(p->posX, p->posY);
+        if(p->posY != win + LIXO){
+            if (p->tipo == 0)
+                desenharPostoCombustivel(p->posX, p->posY);
+            else if (p->tipo == 1)
+                desenharInimigo(p->posX, p->posY);
+        }
         p = p->prox;
     }
 }
@@ -302,6 +305,7 @@ void criarObjetosSecundarios(){
     }
 
     if (tempoAuxComb == horaDoCombustivel){
+        
         inserir(&objetos, win, win - 2.0, 0, width_wall);
         tempoAuxComb = 0;
     }
@@ -315,6 +319,9 @@ void movimentarObjetosSecundarios(){
     {
         if (p->posY != (win + LIXO))
             p->posY -= 0.2;
+            if (nivel > 2){
+                p->posY -= (nivel-2)*0.05;
+            }
         else{
             remover(&objetos, p->posX, win);
         }
@@ -394,12 +401,18 @@ void movimentarPorTempo(){
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(1.5*win)) scenicMove = -1.5*win;    
         
-            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d\n", tempoAuxComb, aviao.combustivel, aviao.pontuacao);
+            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - NIVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
         tempoNivel += 1;
-        if ((tempoNivel%1000)==0){
+        if ((tempoNivel%1050)==0){
             tempoNivel = 0;
-            nivel +=1;
+            
+            if (nivel < 7){
+                nivel += 1;
+                if(nivel > 2){
+                    horaDoCombustivel = intervaloDoCombustivel + ((nivel-2)*15);
+                }
+            }
         }
     }
     glutPostRedisplay();
