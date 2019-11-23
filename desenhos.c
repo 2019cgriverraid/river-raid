@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 
 void desenhaAeronave(){
+   glPushMatrix();
 
     GLfloat asa[][3] = {
         {-4.0, 0.0, 0.0},
@@ -50,6 +51,7 @@ void desenhaAeronave(){
     //glTranslatef(0,6,0);
     glRotatef(-90, 1.0, 0.0, 0.0);
     glutSolidCone(0.6, 1.2, 15, 15);
+    glPopMatrix();
     glPopMatrix();
 }
 
@@ -154,22 +156,22 @@ void desenharPostoCombustivel(GLfloat x, GLfloat y){
 
 void desenharInimigo(GLfloat x, GLfloat y){
     glPushMatrix();
-
+    glTranslatef(0,0,6);
     glBegin(GL_TRIANGLE_FAN);
     glColor3f(0.65, 0.0, 0.0);
-    glVertex3f(0.0 + x, -3.0 + y, 6.0);
+    glVertex3f(0.0 + x, -3.0 + y, 4.0);
 
     glColor3f(1.0, 0.0, 0.0);
-    glVertex3f(-4.0 + x, 3.0 + y, 6.0);
+    glVertex3f(-4.0 + x, 3.0 + y, 4.0);
 
     glColor3f(0.4, 0.0, 0.0);
-    glVertex3f(4.0 + x, 3.0 + y, 6.0);
+    glVertex3f(4.0 + x, 3.0 + y, 4.0);
 
     glColor3f(0.4, 0.0, 0.0);
-    glVertex3f(0.0 + x, 3.0 + y, 2.0);
+    glVertex3f(0.0 + x, 3.0 + y, 0.0);
 
     glColor3f(0.4, 0.0, 0.0);
-    glVertex3f(-4.0 + x, 3.0 + y, 6.0);
+    glVertex3f(-4.0 + x, 3.0 + y, 4.0);
     glEnd();
     glPopMatrix();
 }

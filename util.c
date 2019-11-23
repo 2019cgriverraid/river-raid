@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #define NUM_TIROS 3
+#define LIXO 20.0 
 #define pi (3.14159265 / 360.0)
 
 typedef struct Tiros
@@ -53,7 +54,7 @@ void imprimeLista(Lista *lista)
     Objeto *p = lista->inicio;
     while (p != NULL)
     {
-        //printf("(%.2f, %.2f)\n", p->posX, p->posY);
+        printf("(%.2f, %.2f)\n", p->posX, p->posY);
         p = p->prox;
     }
 }
@@ -92,8 +93,8 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
 
     do
     {
-        novo->posX = (rand() % (2 * winX - 2 * width_wall)) - winX + width_wall; //calcula pra setar uma posição x aleatória dentro da parte azul
-        novo->posY = winY+7.0;
+        novo->posX = (rand() % ( (2 * winX) - (2 * width_wall) - 8) ) - winX + width_wall + 4.0; //calcula pra setar uma posição x aleatória dentro da parte azul
+        novo->posY = winY+13.0;
         novo -> specialMov = 0.0;
         novo -> movDist = 0.0;
         //novo->tipo = //será definido o tipo do objeto, para que saibamos qual é a dimensão considerada para a colisão
@@ -114,29 +115,42 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
 }
 
 // Remove o objeto que tem as posições enviadas por parâmetro da lista de objetos
-void remover(Lista *lista, int posX, int posY, int winY)
+void remover(Lista *lista, GLfloat posX, int winY)
 {
     if (lista->inicio != NULL)
     {
         Objeto *p = lista->inicio;
-
+        imprimeLista(lista);
         while (p != NULL)
         { //procura o objeto para remoção
-            if (p->posX == posX && p->posY == (winY + 7.0))
+            if ((p->posX == posX) && (p->posY == winY+LIXO))
             {
-                if (p->prox != NULL && p->ant != NULL)
+                printf("remover %2f %2f \n", posX, p->posX);
+                if (p->ant != NULL)
                 {
                     p->ant->prox = p->prox;
-                    p->prox->ant = p->ant;
+                   
                 }
-                if (p == lista->inicio)
-                    lista->inicio = NULL;
+                if(p->prox != NULL){
+                     p->prox->ant = p->ant;
+                }
+                if (p == lista->inicio){
+                    if(p->prox != NULL)
+                        lista->inicio = p->prox;
+                    else{
+                        lista->inicio = NULL;
+                        lista->fim = NULL;
+                    }
+
+                }
                 free(p);
                 return;
             }
             p = p->prox;
         }
+        imprimeLista(lista);
     }
+    
 }
 
 void removerTudo(Lista *lista, int winY)
@@ -144,7 +158,8 @@ void removerTudo(Lista *lista, int winY)
     Objeto *p = lista->inicio;
     while (p != NULL)
     {
-        remover(lista, p->posX, p->posY, winY);
+        p->posY = winY + LIXO;
+        remover(lista, p->posX, winY);
         p = p->prox;
     }
     lista->inicio = NULL;

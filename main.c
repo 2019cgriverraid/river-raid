@@ -25,15 +25,18 @@ const GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
 int tiro = 0;
 int timerTiro = 0;
+int intervaloTiro = 40;
 int contTiro = 0;
 
 int fimDeJogo = 0;
 
 float auxTempo = 0.0;
+long tempoNivel = 0;
+int nivel = 1;
 
-int horaDoCombustivel = 200; 
+int horaDoCombustivel = 300; 
 int tempoAuxComb = 0;
-int intervaloEntreComb = 500;
+
 
 int horaDoObstaculo = 100; // define o limite para a variável tempoAuxObstaculo, qd alcança, um obstáculo é criado
 int tempoAuxObstaculo = 0; // conta o tempo que se passou sem obstáculo
@@ -136,8 +139,8 @@ void verificarColisao(){
             // Checa colisão do tiro
             if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 4){
 
-                p->posY = win + 13.0; // seta posição y fixa para remoção
-                remover(&objetos, p->posY, p->posX, win);
+                p->posY = win + LIXO; // seta posição y fixa para remoção
+                remover(&objetos, p->posX, win);
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
 
                 // Atribui pontuação de acordo com o tamanho do obstáculo
@@ -158,15 +161,16 @@ void verificarColisao(){
             fimDeJogo = 1; // Jogo acaba se sim
 
         // Checa se passou por posto de combustível
-        if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4 && combRecente == 0){
-            aviao.combustivel = (aviao.combustivel + 3) > 30 ? 30 : aviao.combustivel + 4;
+        if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
+            aviao.combustivel = (aviao.combustivel + 7) > 30 ? 30 : aviao.combustivel + 7;
             combRecente = 1;
         }
 
 
         // Checa se o objeto não passou da fronteira inferior da janela
         if (p->posY < -win)
-            p->posY = win + 13.0; // seta posição y fixa para remoção
+            p->posY = win + LIXO; // seta posição y fixa para remoção
+            remover(&objetos, p->posX, win);
 
         p = p->prox;
     }
@@ -211,6 +215,8 @@ void display(void){
             auxTempo += 1;
         else
         {
+            tempoNivel = 0;
+            nivel = 1;
             fimDeJogo = 0;
             auxTempo = 0.0;
         }
@@ -250,7 +256,7 @@ void controleTiros(){
     //aviao.tiros[contTiro].naTela = 1;
     contTiro = (contTiro + 1) % NUM_TIROS; //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
                                            //com % 10 eles somem no meio da tela
-    timerTiro = 75;
+    timerTiro = intervaloTiro;
     }
     tiro = 1;
 }
@@ -297,7 +303,7 @@ void criarObjetosSecundarios(){
 
     if (tempoAuxComb == horaDoCombustivel){
         inserir(&objetos, win, win - 2.0, 0, width_wall);
-        tempoAuxComb = -intervaloEntreComb;
+        tempoAuxComb = 0;
     }
 }
 
@@ -307,21 +313,33 @@ void movimentarObjetosSecundarios(){
 
     while (p != NULL)
     {
-        if (p->posY != (win + 13.0))
+        if (p->posY != (win + LIXO))
             p->posY -= 0.2;
+        else{
+            remover(&objetos, p->posX, win);
+        }
         if(p->tipo ==1){
-            if(!p->specialMov){
-                p->movDist = p->movDist + 0.2;
-                p->posX = p->posX + 0.2;
-                if(p->movDist > 7 || p->posX >= (win- width_wall)){
-                    p->specialMov = 1;
+            if (p->posY<win){
+                GLfloat newPosX = 0;
+                if(!p->specialMov){
+                    newPosX = p->posX + (0.1*(nivel-1));
+                    if((p->movDist + (0.1*nivel)) > (4+nivel) || p->posX >= (win- width_wall - 3.8)){
+                        p->specialMov = 1;
+                    }
+                    else{
+                        p->posX = newPosX;
+                        p->movDist = p->movDist + (0.1*(nivel));
+                    }
                 }
-            }
-            else{
-                p->movDist = p->movDist - 0.2;
-                p->posX = p->posX - 0.2;
-                if(p->movDist < 1 || p->posX <= (-win+ width_wall) ){
-                    p->specialMov = 0;
+                else{
+                    newPosX = p->posX - (0.1*(nivel-1));
+                    if(( (p->movDist - (0.1*nivel)) < (-4-nivel)) || (p->posX <= (-win + width_wall + 3.8) )){
+                        p->specialMov = 0;
+                    }
+                    else{
+                        p->posX = newPosX;
+                        p->movDist = p->movDist - (0.1*(nivel));
+                    }
                 }
             }
         }
@@ -377,6 +395,11 @@ void movimentarPorTempo(){
             if(scenicMove>(1.5*win)) scenicMove = -1.5*win;    
         
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d\n", tempoAuxComb, aviao.combustivel, aviao.pontuacao);
+        }
+        tempoNivel += 1;
+        if ((tempoNivel%1000)==0){
+            tempoNivel = 0;
+            nivel +=1;
         }
     }
     glutPostRedisplay();
