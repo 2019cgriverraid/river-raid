@@ -20,7 +20,7 @@ GLfloat width_wall = 9.0;
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
 const GLfloat light_specular[] = { 2.0f, 2.0f, 2.0f, 2.0f };
-const GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
+const GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
 
 int tiro = 0;
@@ -381,10 +381,15 @@ int main(int argc, char **argv){
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
 
+    glPushMatrix();
+    glTranslatef(0.0,0.0,-1.0);
     glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glPopMatrix();
+
+    
 
 
     glutDisplayFunc(display);
