@@ -357,8 +357,8 @@ void movimentarPorTempo(){
                     }
                 }
             }
-            scenicMove = (scenicMove + 0.1);
-            if(scenicMove>(1.25*win)) scenicMove = -1.25*win;    
+            scenicMove = (scenicMove + 0.2);
+            if(scenicMove>(1.5*win)) scenicMove = -1.5*win;    
         
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d\n", tempoAuxComb, aviao.combustivel, aviao.pontuacao);
         }
