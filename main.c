@@ -24,6 +24,7 @@ const GLfloat light_position[] = { 1.0, 1.0, 1.0, 0.0 };
 
 
 int tiro = 0;
+int timerTiro = 0;
 int contTiro = 0;
 
 int fimDeJogo = 0;
@@ -242,12 +243,15 @@ void teclado(unsigned char key, int x, int y){
 
 // Adiciona um tiro no vetor de tiros e seta a posição inicial dele
 void controleTiros(){
+    if (timerTiro < 1){
     aviao.tiros[contTiro].x = aviao.x;    //mesmo x da da posição do avião quando ele atirou
     aviao.tiros[contTiro].y = -win + 3.0; //pra sair da beira do avião
     //printf("%d: %f\n",contTiro, aviao.x );
     //aviao.tiros[contTiro].naTela = 1;
     contTiro = (contTiro + 1) % NUM_TIROS; //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
                                            //com % 10 eles somem no meio da tela
+    timerTiro = 75;
+    }
     tiro = 1;
 }
 
@@ -318,6 +322,9 @@ void movimentarPorTempo(){
             fimDeJogo = 1;
 
         else{
+            if(timerTiro > 0){
+                timerTiro = timerTiro - 1;
+            }
             tempoAuxObstaculo++;
             tempoAuxComb++;
             if(!(tempoAuxComb % 50)) aviao.combustivel--;

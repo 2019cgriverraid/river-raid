@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define NUM_TIROS 30
+#define NUM_TIROS 3
 #define pi (3.14159265 / 360.0)
 
 typedef struct Tiros
