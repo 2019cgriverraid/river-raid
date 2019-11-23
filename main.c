@@ -7,11 +7,6 @@
 #include "desenhos.c"
 #include "textura.c"
 
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
-const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
-const GLfloat light_specular[] = { 2.0f, 2.0f, 2.0f, 2.0f };
-const GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
-
 int lastId = 0;
 GLfloat janelaX = 500;
 GLfloat janelaY = 500;
@@ -20,6 +15,13 @@ GLfloat win = 50;
 GLfloat scenicMove = 0.0;
 GLfloat anglex = 250.0;
 GLfloat width_wall = 9.0;
+
+
+const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
+const GLfloat light_specular[] = { 2.0f, 2.0f, 2.0f, 2.0f };
+const GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0 };
+
 
 int tiro = 0;
 int contTiro = 0;
@@ -349,7 +351,7 @@ void movimentarPorTempo(){
                 }
             }
             scenicMove = (scenicMove + 0.1);
-            if(scenicMove>(win*1.25)) scenicMove = 0.0;    
+            if(scenicMove>(1.25*win)) scenicMove = -1.25*win;    
         
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d\n", tempoAuxComb, aviao.combustivel, aviao.pontuacao);
         }
