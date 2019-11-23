@@ -197,6 +197,19 @@ void desenharObjetos(){
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
 
+    char msgp[32] = "POINTS: ";
+    sprintf(msgp, "%s %d", msgp, aviao.pontuacao);
+    output(-win, win, msgp);
+
+    char msgf[32] = "FUEL: ";
+    sprintf(msgf, "%s %d", msgf, aviao.combustivel);
+    output(-win, win-4.0, msgf);
+
+    char msgn[32] = "NIVEL: ";
+    sprintf(msgn, "%s %d", msgn, nivel);
+    output(-win, win-8.0, msgn);
+
+
     if (!fimDeJogo){ // desenha objetos na tela
 
         glEnable(GL_TEXTURE_2D);
@@ -393,7 +406,7 @@ void movimentarPorTempo(){
                 int i;
                 for (i = 0; i < NUM_TIROS; i++){
                     aviao.tiros[i].y += 1.6;
-                    if (aviao.tiros[i].y > win+10){
+                    if (aviao.tiros[i].y > win + 5){
                         aviao.tiros[i].y = -win;
                         aviao.tiros[i].x = -win - 5.0;
                     }
@@ -423,6 +436,14 @@ void movimentarPorTempo(){
 int main(int argc, char **argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+
+  int i, msg_submenu, color_submenu;
+
+  for (i = 1; i < argc; i++) {
+    if (!strcmp(argv[i], "-mono")) {
+      font = GLUT_BITMAP_9_BY_15;
+    }
+  }
     glutInitWindowSize(janelaX, janelaY);
     glutInitWindowPosition(300, 100);
     glutCreateWindow("River Raid 3D");
@@ -456,7 +477,6 @@ int main(int argc, char **argv){
     glutKeyboardFunc(teclado);
     glutSpecialFunc(controle);
     glutTimerFunc(tempoRolagem, movimentarPorTempo, 1);
-
     glutMainLoop();
 
     return 0;
