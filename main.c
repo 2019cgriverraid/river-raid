@@ -31,7 +31,7 @@ int fimDeJogo = 0;
 
 float auxTempo = 0.0;
 
-int horaDoCombustivel = 300; 
+int horaDoCombustivel = 200; 
 int tempoAuxComb = 0;
 int intervaloEntreComb = 500;
 

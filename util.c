@@ -28,6 +28,8 @@ typedef struct Objeto
 {
     GLfloat posX;
     GLfloat posY;
+    GLfloat specialMov;
+    GLfloat movDist;
     int id;
     int tipo;
     struct Objeto *prox, *ant;
@@ -55,8 +57,13 @@ void imprimeLista(Lista *lista)
         p = p->prox;
     }
 }
-
-float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy);
+// Calcula a distância entre dois pontos (px, py) e (qx, qy)
+float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy)
+{
+    //printf("px %2f py %2f qx %2f qy %2f \n", px, py, qx, qy);
+    //printf("dist %f\n", sqrt(pow((px - qx), 2) + pow((py - qy), 2)) );
+    return sqrt(pow((px - qx), 2) + pow((py - qy), 2));
+}
 // Verificar se o mesmo objeto nao esta sendo colocado no mesmo lugar que outro já existente
 int verificarUnicidadeCoordenadas(Lista *lista, float x, float y)
 {
@@ -87,6 +94,8 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
     {
         novo->posX = (rand() % (2 * winX - 2 * width_wall)) - winX + width_wall; //calcula pra setar uma posição x aleatória dentro da parte azul
         novo->posY = winY+7.0;
+        novo -> specialMov = 0.0;
+        novo -> movDist = 0.0;
         //novo->tipo = //será definido o tipo do objeto, para que saibamos qual é a dimensão considerada para a colisão
     } while (!verificarUnicidadeCoordenadas(lista, novo->posX, novo->posY));
 
@@ -142,10 +151,3 @@ void removerTudo(Lista *lista, int winY)
     lista->fim = NULL;
 }
 
-// Calcula a distância entre dois pontos (px, py) e (qx, qy)
-float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy)
-{
-    //printf("px %2f py %2f qx %2f qy %2f \n", px, py, qx, qy);
-    //printf("dist %f\n", sqrt(pow((px - qx), 2) + pow((py - qy), 2)) );
-    return sqrt(pow((px - qx), 2) + pow((py - qy), 2));
-}
