@@ -38,7 +38,7 @@ int ultimaPontuacao = 0;
 int horaDoCombustivel = 285; 
 int intervaloDoCombustivel = 285; 
 int tempoAuxComb = 0;
-
+int vidas = 3;
 
 int horaDoObstaculo = 100; // define o limite para a variável tempoAuxObstaculo, qd alcança, um obstáculo é criado
 int tempoAuxObstaculo = 0; // conta o tempo que se passou sem obstáculo
@@ -63,6 +63,7 @@ void inicializaAeronave(){
     aviao.rotY = 0.0;
     if (aviao.pontuacao > highscore) highscore = aviao.pontuacao;
     ultimaPontuacao = aviao.pontuacao;
+    vidas = 3;
     aviao.pontuacao = 0;
     aviao.combustivel = 30;
 
@@ -111,14 +112,14 @@ void init(void){
     glPushMatrix();
 }
 
-// Desenha avião e tiros
+// Desenha aviao e tiros
 void aeronave(){
     //glMatrixMode(GL_MODELVIEW);
     //glLoadIdentity();
 
     glPushMatrix();
-        glTranslatef(aviao.x, aviao.y, 0.0); //leva o avião para baixo na tela
-        glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o avião para os lados em direção ao eixo x quando ele se movimentar
+        glTranslatef(aviao.x, aviao.y, 0.0); //leva o aviao para baixo na tela
+        glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o aviao para os lados em direção ao eixo x quando ele se movimentar
         desenhaAeronave();
     glPopMatrix();
 
@@ -162,8 +163,16 @@ void verificarColisao(){
         }
 
         // Checa colisão de obstáculo com a aeronave
-        if (p->tipo != 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4)
-            fimDeJogo = 1; // Jogo acaba se sim
+        if (p->tipo != 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
+            vidas -= 1;
+            p->posY = win + LIXO; // seta posição y fixa para remoção
+            remover(&objetos, p->posX, win);
+            if (vidas < 1){ 
+                fimDeJogo = 1; // Jogo acaba se sim
+            }
+            else aviao.combustivel = 30;
+
+        }
 
         // Checa se passou por posto de combustível
         if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
@@ -217,6 +226,10 @@ void display(void){
         sprintf(msgn, "%s %d", msgn, nivel);
         output(-win, win-8.0, msgn);
 
+        char msgv[32] = "VIDAS: ";
+        sprintf(msgv, "%s %d", msgv, vidas);
+        output(-win, -win + 4 , msgv);
+
         glEnable(GL_TEXTURE_2D);
         desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
         desenhaParedeDireita(win, width_wall, texture_id1,scenicMove);
@@ -255,7 +268,7 @@ void display(void){
     glutSwapBuffers();
 }
 
-// NÃO EXCLUIR - Controle extra, tá sobrando, mas vamos usar pra fazer o avião rotacionar na movimentação
+// NÃO EXCLUIR - Controle extra, tá sobrando, mas vamos usar pra fazer o aviao rotacionar na movimentação
 void teclado(unsigned char key, int x, int y){
     //anglex = acionarLetra(key, anglex);
     switch (key)
@@ -281,8 +294,8 @@ void teclado(unsigned char key, int x, int y){
 // Adiciona um tiro no vetor de tiros e seta a posição inicial dele
 void controleTiros(){
     if (timerTiro < 1){
-    aviao.tiros[contTiro].x = aviao.x;    //mesmo x da da posição do avião quando ele atirou
-    aviao.tiros[contTiro].y = -win + 3.0; //pra sair da beira do avião
+    aviao.tiros[contTiro].x = aviao.x;    //mesmo x da da posição do aviao quando ele atirou
+    aviao.tiros[contTiro].y = -win + 3.0; //pra sair da beira do aviao
     //printf("%d: %f\n",contTiro, aviao.x );
     //aviao.tiros[contTiro].naTela = 1;
     contTiro = (contTiro + 1) % NUM_TIROS; //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
@@ -305,18 +318,30 @@ void controle(int key, int xx, int yy){
         //rY += 5;
         break;
     case GLUT_KEY_LEFT:
-        if (aviao.x - 4 <= -win + width_wall + 0.5)
-            fimDeJogo = 1;
+        if (aviao.x - 4 <= -win + width_wall + 0.5){
+            vidas -= 1;
+            if(vidas < 1) { fimDeJogo = 1;} // Jogo acaba se sim
+            else{ 
+                aviao.combustivel = 30;
+                aviao.x += 4.0;
+            }
+        }
         else{
-            aviao.x -= 1.3; //movimenta o avião para a esquerda
+            aviao.x -= 1.3; //movimenta o aviao para a esquerda
             aviao.rotX = aviao.rotX-3.5 <= -28 ? -28: aviao.rotX-3.5;
         }
         break;
     case GLUT_KEY_RIGHT:
-        if (aviao.x + 4 >= win - width_wall - 0.5)
-            fimDeJogo = 1;
+        if (aviao.x + 4 >= win - width_wall - 0.5){
+            vidas -= 1;
+            if(vidas < 1){ fimDeJogo = 1; }// Jogo acaba se sim
+            else{ 
+                aviao.combustivel = 30;
+                aviao.x -= 4.0;
+            }
+        }
         else{
-            aviao.x += 1.3; //movimenta o avião para a direita
+            aviao.x += 1.3; //movimenta o aviao para a direita
             aviao.rotX = aviao.rotX+3.5 >= 28 ? 28: aviao.rotX+3.5;
         }
         break;
@@ -387,8 +412,14 @@ void movimentarObjetosSecundarios(){
 void movimentarPorTempo(){
     if (!fimDeJogo)
     {
-        if(aviao.combustivel <= 0)
-            fimDeJogo = 1;
+        if(aviao.combustivel <= 0){
+            vidas -= 1;
+            
+            if (vidas < 1){
+                fimDeJogo = 1; 
+            }
+            else aviao.combustivel = 30;
+        }
 
         else{
             if(timerTiro > 0){
