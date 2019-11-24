@@ -33,7 +33,8 @@ int fimDeJogo = 0;
 float auxTempo = 0.0;
 long tempoNivel = 0;
 int nivel = 1;
-
+int highscore = 0;
+int ultimaPontuacao = 0;
 int horaDoCombustivel = 285; 
 int intervaloDoCombustivel = 285; 
 int tempoAuxComb = 0;
@@ -60,6 +61,8 @@ void inicializaAeronave(){
     aviao.y = -win + 7.0;
     aviao.rotX = 0.0;
     aviao.rotY = 0.0;
+    if (aviao.pontuacao > highscore) highscore = aviao.pontuacao;
+    ultimaPontuacao = aviao.pontuacao;
     aviao.pontuacao = 0;
     aviao.combustivel = 30;
 
@@ -197,20 +200,22 @@ void desenharObjetos(){
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
 
-    char msgp[32] = "POINTS: ";
-    sprintf(msgp, "%s %d", msgp, aviao.pontuacao);
-    output(-win, win, msgp);
-
-    char msgf[32] = "FUEL: ";
-    sprintf(msgf, "%s %d", msgf, aviao.combustivel);
-    output(-win, win-4.0, msgf);
-
-    char msgn[32] = "NIVEL: ";
-    sprintf(msgn, "%s %d", msgn, nivel);
-    output(-win, win-8.0, msgn);
+    
 
 
     if (!fimDeJogo){ // desenha objetos na tela
+
+        char msgp[32] = "POINTS: ";
+        sprintf(msgp, "%s %d", msgp, aviao.pontuacao);
+        output(-win, win, msgp);
+
+        char msgf[32] = "FUEL: ";
+        sprintf(msgf, "%s %d", msgf, aviao.combustivel);
+        output(-win, win-4.0, msgf);
+
+        char msgn[32] = "NIVEL: ";
+        sprintf(msgn, "%s %d", msgn, nivel);
+        output(-win, win-8.0, msgn);
 
         glEnable(GL_TEXTURE_2D);
         desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
@@ -222,12 +227,21 @@ void display(void){
         aeronave();
     }
     else{ // TELA AZUL
+
         if (auxTempo == 1.0)
         {
+            
             printf("fim de jogo\n");
             inicializaAeronave();
             removerTudo(&objetos, win);
         }
+        char msgp[32] = "POINTS: ";
+        sprintf(msgp, "%s %d", msgp, ultimaPontuacao);
+        gameOver(-win/2, -10, msgp);
+        char msgh[32] = "HIGHSCORE: ";
+        sprintf(msgh, "%s %d", msgh, highscore);
+        gameOver(-win/2, 0, msgh);
+        gameOver(-win/2, 10, "GAME OVER");
         if (auxTempo < 100)
             auxTempo += 1;
         else
@@ -413,7 +427,7 @@ void movimentarPorTempo(){
                 }
             }
             scenicMove = (scenicMove + 0.2);
-            if(scenicMove>(1.5*win)) scenicMove = -1.5*win;    
+            if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
         
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - NIVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
