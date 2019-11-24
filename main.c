@@ -148,20 +148,23 @@ void verificarColisao(){
             // Checa colisão do tiro
             if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 4){
                 timerTiro = 0;
-                p->posY = win + LIXO; // seta posição y fixa para remoção
-                remover(&objetos, p->posX, win);
+
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
 
                 // Atribui pontuação de acordo com o tamanho do obstáculo
-                if (p->tipo == 0)
+                if (p->tipo == 0){
                     aviao.pontuacao += 80;
+                }
                 else if (p->tipo == 1)
                     aviao.pontuacao += 30;
                 else if (p->tipo == 2)
                     aviao.pontuacao += 60;
                 // ...
 
-                printf("PONTUAÇÃO: %d\n", aviao.pontuacao);
+                p->posY = win + LIXO; // seta posição y fixa para remoção
+                remover(&objetos, p->posX, win);
+
+                //printf("PONTUAÇÃO: %d\n", aviao.pontuacao);
             }
         }
 
@@ -179,10 +182,13 @@ void verificarColisao(){
 
         // Checa se passou por posto de combustível
         if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
-            aviao.combustivel = (aviao.combustivel + 6) > 30 ? 30 : aviao.combustivel + 6;
+            float xAnimation = p->posX;
+            float yAnimation = p->posY + 5.0;
+            aviao.combustivel = (aviao.combustivel + 8) > 30 ? 30 : aviao.combustivel + 8;
             combRecente = 1;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
+            inserirPos(&objetos, xAnimation, yAnimation, 4, width_wall);
         }
 
 
@@ -205,6 +211,8 @@ void desenharObjetos(){
                 desenharPostoCombustivel(p->posX, p->posY);
             else if (p->tipo == 1)
                 desenharInimigo(p->posX, p->posY);
+            else if (p->tipo == 4)
+                animacaoPostoCombustivel(p->posX, p->posY);
         }
         p = p->prox;
     }
@@ -249,7 +257,7 @@ void display(void){
         if (auxTempo == 1.0)
         {
             
-            printf("fim de jogo\n");
+            //printf("fim de jogo\n");
             inicializaAeronave();
             removerTudo(&objetos, win);
         }
@@ -301,7 +309,7 @@ void controleTiros(){
     if (timerTiro < 1){
     aviao.tiros[contTiro].x = aviao.x;    //mesmo x da da posição do aviao quando ele atirou
     aviao.tiros[contTiro].y = -win + 3.0; //pra sair da beira do aviao
-    //printf("%d: %f\n",contTiro, aviao.x );
+    ////printf("%d: %f\n",contTiro, aviao.x );
     //aviao.tiros[contTiro].naTela = 1;
     contTiro = (contTiro + 1) % NUM_TIROS; //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
                                            //com % 10 eles somem no meio da tela
@@ -382,6 +390,13 @@ void movimentarObjetosSecundarios(){
             }
         else{
             remover(&objetos, p->posX, win);
+        }
+        if(p->tipo == 4){
+            p->TTL -= 1;
+            if(p->TTL == 0){
+                p->posY = (win + LIXO);
+                remover(&objetos, p->posX, win);
+            }
         }
         if(p->tipo ==1){
             if (p->posY<win){
@@ -467,7 +482,7 @@ void movimentarPorTempo(){
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
         
-            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - LEVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
+            //printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - LEVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
         tempoNivel += 1;
         if ((tempoNivel%(750+(nivel*25)))==0){
