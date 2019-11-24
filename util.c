@@ -31,6 +31,7 @@ typedef struct Objeto
     GLfloat posY;
     GLfloat specialMov;
     GLfloat movDist;
+    GLint TTL;
     int id;
     int tipo;
     struct Objeto *prox, *ant;
@@ -97,8 +98,39 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
         novo->posY = winY+13.0;
         novo -> specialMov = 0.0;
         novo -> movDist = 0.0;
+        novo -> TTL = -1;
+        if(tipo == 4) novo -> TTL = 18;
         //novo->tipo = //será definido o tipo do objeto, para que saibamos qual é a dimensão considerada para a colisão
     } while (!verificarUnicidadeCoordenadas(lista, novo->posX, novo->posY));
+
+    if (lista->inicio == NULL)
+    {
+        novo->ant = NULL;
+        lista->inicio = novo;
+    }
+    else
+    {
+        novo->ant = lista->fim;
+        lista->fim->prox = novo;
+    }
+    lista->fim = novo;
+    imprimeLista(lista);
+}
+
+// Insere um novo objeto na lista em uma posicao Fixa
+void inserirPos(Lista *lista, GLfloat X, GLfloat Y, int tipo, int width_wall)
+{
+    struct Objeto *novo = malloc(sizeof(Objeto));
+    novo->prox = NULL;
+    novo->tipo = tipo;
+
+    novo->posX = X;
+    novo->posY = Y;
+    novo -> specialMov = 0.0;
+    novo -> movDist = 0.0;
+    novo -> TTL = -1;
+    if(tipo == 4) novo -> TTL = 18;
+        //novo->tipo = //será definido o tipo do objeto, para que saibamos qual é a dimensão considerada para a colisão
 
     if (lista->inicio == NULL)
     {

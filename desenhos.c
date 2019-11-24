@@ -166,7 +166,7 @@ void desenharPostoCombustivel(GLfloat x, GLfloat y){
     glColor3f(1.0,0.0,0.0);
     GLfloat tam = 4.0;
 
-    glTranslatef(x, y-0.5, 0.0);
+    glTranslatef(x, y-0.2, 0.0);
     glRotatef(0.0,0.0,90.0, 1.0);
     GLUquadricObj *quadObj;
     quadObj = gluNewQuadric ();
@@ -197,6 +197,34 @@ void desenharPostoCombustivel(GLfloat x, GLfloat y){
     glTranslatef(0.0,4.0,0.0);
     
 
+    glPopMatrix();
+}
+
+void animacaoPostoCombustivel(GLfloat x, GLfloat y){
+    glPushMatrix();
+
+    //glColor3f(1.0, 1.0, 1.0);
+    //gameOver(x-0.1, y+0.1, "F");
+    //glColor3f(1.0, 1.0, 0.0);
+
+    glColor3f(1.0,0.0,0.0);
+
+    glTranslatef(x, y-0.2, 0.0);
+    glRotatef(0.0,0.0,90.0, 1.0);
+    GLUquadricObj *quadObj;
+    quadObj = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj, GLU_FILL);
+    gluQuadricNormals (quadObj, GLU_SMOOTH);
+    gluCylinder (quadObj, 8.0, 8.0, 3.0, 24, 4);
+    glTranslatef(0.0,3.0,0.0);
+    glColor3f(1.0,1.0,1.0);
+    GLUquadricObj *quadObj2;
+    quadObj2 = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj2, GLU_FILL);
+    gluQuadricNormals (quadObj2, GLU_SMOOTH);
+    gluCylinder (quadObj2, 8.0, 8.0, 3.0, 24, 4);
+    glTranslatef(0.0,1.5,0.0);
+    glColor3f(1.0,0.0,0.0);
     glPopMatrix();
 }
 
