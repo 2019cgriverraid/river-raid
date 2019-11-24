@@ -246,14 +246,11 @@ void desenharObjetos(){
                 desenharPostoCombustivel(p->posX, p->posY);
             else if (p->tipo == 1)
                 desenharInimigo(p->posX, p->posY);
-<<<<<<< HEAD
             else if(p->tipo == 2){
                 helicoptero(p->posX, p->posY);
             }
-=======
             else if (p->tipo == 4)
                 animacaoPostoCombustivel(p->posX, p->posY);
->>>>>>> 44a220549274b3cc0958b78a68789811b1f44f8f
         }
         p = p->prox;
     }
