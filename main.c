@@ -15,6 +15,7 @@ GLfloat scenicMove = 0.0;
 GLfloat anglex = 250.0;
 GLfloat width_wall = 9.0;
 int warning = 0;
+int levelClearedMessage = 0;
 
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -166,7 +167,7 @@ void verificarColisao(){
 
         // Checa colisão de obstáculo com a aeronave
         if (p->tipo != 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
-            vidas -= 1; warning = 8;
+            vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
             if (vidas < 1){ 
@@ -212,10 +213,6 @@ void desenharObjetos(){
 // Define o que será mostrado na tela
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
-
-    
-
-
     if (!fimDeJogo){ // desenha objetos na tela
 
         char msgp[32] = "POINTS: ";
@@ -226,13 +223,17 @@ void display(void){
         sprintf(msgf, "%s %d", msgf, aviao.combustivel);
         output(-win, win-4.0, msgf);
 
-        char msgn[32] = "NIVEL: ";
+        char msgn[32] = "LEVEL: ";
         sprintf(msgn, "%s %d", msgn, nivel);
         output(-win, win-8.0, msgn);
 
-        char msgv[32] = "VIDAS: ";
+        char msgv[32] = "LIVES: ";
         sprintf(msgv, "%s %d", msgv, vidas);
         output(-win, -win + 4 , msgv);
+
+        if(levelClearedMessage > 0){
+            gameOver(-win/2, 5.0, "LEVEL CLEARED!");
+        }
 
         glEnable(GL_TEXTURE_2D);
         desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
@@ -323,7 +324,7 @@ void controle(int key, int xx, int yy){
         break;
     case GLUT_KEY_LEFT:
         if (aviao.x - 4 <= -win + width_wall + 0.5){
-            vidas -= 1; warning = 8;
+            vidas -= 1; warning = 8; tempoNivel = 0;
             if(vidas < 1) { fimDeJogo = 1;} // Jogo acaba se sim
             else{ 
                 aviao.combustivel = 30;
@@ -337,7 +338,7 @@ void controle(int key, int xx, int yy){
         break;
     case GLUT_KEY_RIGHT:
         if (aviao.x + 4 >= win - width_wall - 0.5){
-            vidas -= 1; warning = 8;
+            vidas -= 1; warning = 8; tempoNivel = 0;
             if(vidas < 1){ fimDeJogo = 1; }// Jogo acaba se sim
             else{ 
                 aviao.combustivel = 30;
@@ -415,10 +416,11 @@ void movimentarObjetosSecundarios(){
 // TO DO: fazer variar o tempo de acordo com o nivel que o jogador está
 void movimentarPorTempo(){
     if(warning > 0) warning -= 1;
+    if (levelClearedMessage > 0) levelClearedMessage -= 1;
     if (!fimDeJogo)
     {
         if(aviao.combustivel <= 0){
-            vidas -= 1; warning = 8;
+            vidas -= 1; warning = 8; tempoNivel = 0;
             
             if (vidas < 1){
                 fimDeJogo = 1; 
@@ -465,14 +467,15 @@ void movimentarPorTempo(){
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
         
-            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - NIVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
+            printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - LEVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
         tempoNivel += 1;
-        if ((tempoNivel%650)==0){
+        if ((tempoNivel%(750+(nivel*25)))==0){
             tempoNivel = 0;
-            
             if (nivel < 7){
+                levelClearedMessage = 24;
                 nivel += 1;
+                aviao.pontuacao += 500;
                 if(nivel > 3){
                     horaDoCombustivel = intervaloDoCombustivel + ((nivel-3)*15);
                 }
