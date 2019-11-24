@@ -237,3 +237,21 @@ void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
     glEnd();
     glPopMatrix();
 }
+
+void desenharGramadoCentral(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat x, GLfloat y){
+    glPushMatrix();
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+
+    GLfloat aux_esq = 31.5 - win + 1*width_wall;
+    GLfloat aux_dir = 31.5 - win + 3*width_wall;
+    
+    glBegin(GL_POLYGON);
+    glColor3f(0.0, 1.0, 0.0);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(aux_esq, 5 * win/4 - y,  0);
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(aux_esq, 7 * win/4 - y,  0);
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(aux_dir, 7 * win/4 - y,  0);
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(aux_dir, 5 * win/4 - y,  0);
+
+    glEnd();
+    glPopMatrix();
+}

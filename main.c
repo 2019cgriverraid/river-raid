@@ -13,6 +13,7 @@ GLfloat janelaY = 500;
 
 GLfloat win = 50;
 GLfloat scenicMove = 0.0;
+GLfloat centralMove = 0.0;
 GLfloat anglex = 250.0;
 GLfloat width_wall = 9.0;
 
@@ -43,12 +44,19 @@ int horaDoObstaculo = 100; // define o limite para a variável tempoAuxObstaculo
 int tempoAuxObstaculo = 0; // conta o tempo que se passou sem obstáculo
 int intervaloEntreObjetos = 100; // controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
 
+
+int horaDaGrama = 200;
+int tempoAuxGrama = 0;
+int intervaloEntreGramas = 750; 
+
 int tempoRolagem = 10;
 
-GLuint texture_id1, texture_id2;
+GLuint texture_id1, texture_id2, texture_id3;
 
 Lista objetos;
 Aeronave aviao;
+
+Lista gramadoCentral;
 
 GLint auxRot = 0;
 GLint auxQtdRot = 0;
@@ -103,6 +111,8 @@ void init(void){
     inicializarLista(&objetos);
     //lighting(); //defininido os parâmetros de iluminação
 
+    //inicializarLista(&gramadoCentral);
+
     glGenTextures(1, &texture_id1);
 
     glPushMatrix();
@@ -129,6 +139,60 @@ void aeronave(){
         }
     }
 }
+
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+
+void verificarColisaoGramadoCentral(){
+    int i;
+    Objeto *p = gramadoCentral.inicio;
+    
+    while (p != NULL){
+        // Checa colisão de obstáculo com a aeronave
+        if (dist(p->posX, p->posY, aviao.x, aviao.y) < 4)
+            fimDeJogo = 1; // Jogo acaba se sim
+    
+        // Checa se o objeto não passou da fronteira inferior da janela
+        if (p->posY < -win)
+            p->posY = win + LIXO; // seta posição y fixa para remoção
+            remover(&objetos, p->posX, win);
+
+        p = p->prox;
+    }
+}
+
+// Desenha objetos obstáulo
+void desenharGramadosCentrais(){
+    //Objeto *p = gramadoCentral.inicio;
+
+    //while (p != NULL){
+        //if(p->posY != win + LIXO){
+        //}
+      //  p = p->prox;
+    //}
+}
+
+void movimentarGramadoCentral(){
+    Objeto *p = gramadoCentral.inicio;
+
+    while (p != NULL)
+    {
+        if (p->posY != (win + LIXO))
+            p->posY -= 0.2;
+            if (nivel > 2){
+                p->posY -= (nivel-2)*0.05;
+            }
+        else{
+            remover(&objetos, p->posX, win);
+        }
+        p = p->prox;
+    }
+}
+
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 
 // Verifica se ocorreu a colisão tiro-obstaculo e aviao-obstaculo
 void verificarColisao(){
@@ -188,6 +252,7 @@ void desenharObjetos(){
                 desenharPostoCombustivel(p->posX, p->posY);
             else if (p->tipo == 1)
                 desenharInimigo(p->posX, p->posY);
+            //desenharGramadoCentral(win,width_wall,texture_id1,p->posX, p->posY);
         }
         p = p->prox;
     }
@@ -216,9 +281,13 @@ void display(void){
         desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
         desenhaParedeDireita(win, width_wall, texture_id1,scenicMove);
         desenhaAgua(win, width_wall, texture_id2,scenicMove);
+        desenharGramadoCentral(win, width_wall,texture_id1,0,centralMove);
         glDisable(GL_TEXTURE_2D);
         
         desenharObjetos();
+
+        //desenharGramadosCentrais();
+
         aeronave();
     }
     else{ // TELA AZUL
@@ -319,11 +388,16 @@ void criarObjetosSecundarios(){
     }
 
     if (tempoAuxComb == horaDoCombustivel){
-        
         inserir(&objetos, win, win - 2.0, 0, width_wall);
         tempoAuxComb = 0;
     }
+
+    if(tempoAuxGrama == horaDaGrama){
+        inserir(&objetos, win, win - 2.0, 2, width_wall);
+    }
 }
+
+
 
 // Movimenta para baixo os objetos que não foram atingidos
 void movimentarObjetosSecundarios(){
@@ -364,6 +438,9 @@ void movimentarObjetosSecundarios(){
                 }
             }
         }
+        /*if(p->tipo == 2){
+            if(p->posY)
+        }*/
         p = p->prox;
     }
 }
@@ -385,6 +462,8 @@ void movimentarPorTempo(){
             if(!(tempoAuxComb % 50)) aviao.combustivel--;
             if(!(tempoAuxComb % 100)) combRecente = 0;
                 
+
+            tempoAuxGrama++;
 
             criarObjetosSecundarios();
             movimentarObjetosSecundarios();
@@ -413,7 +492,12 @@ void movimentarPorTempo(){
                 }
             }
             scenicMove = (scenicMove + 0.2);
-            if(scenicMove>(1.5*win)) scenicMove = -1.5*win;    
+            if(scenicMove>(1.5*win)) scenicMove = -1.5*win;
+
+            centralMove = (centralMove + 0.2);
+            if(centralMove > 3.0*win) centralMove = -2.0*win;
+
+
         
             printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - NIVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
@@ -451,6 +535,7 @@ int main(int argc, char **argv){
 
     CarregaTextura("grama.bmp", texture_id1);
     CarregaTextura("agua.bmp", texture_id2);
+    CarregaTextura("gramamenor.bmp",texture_id1);
 
     /*SetupRC();
   glEnable(GL_LIGHTING);

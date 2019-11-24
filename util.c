@@ -1,6 +1,8 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <stdlib.h>
+#include <time.h> 
+
 
 #define NUM_TIROS 4
 #define LIXO 20.0 
@@ -87,12 +89,14 @@ int verificarUnicidadeCoordenadas(Lista *lista, float x, float y)
 // Insere um novo objeto na lista
 void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
 {
+
     struct Objeto *novo = malloc(sizeof(Objeto));
     novo->prox = NULL;
     novo->tipo = tipo;
 
     do
     {
+        srand(time(NULL)); 
         novo->posX = (rand() % ( (2 * winX) - (2 * width_wall) - 8) ) - winX + width_wall + 4.0; //calcula pra setar uma posição x aleatória dentro da parte azul
         novo->posY = winY+13.0;
         novo -> specialMov = 0.0;
@@ -165,4 +169,3 @@ void removerTudo(Lista *lista, int winY)
     lista->inicio = NULL;
     lista->fim = NULL;
 }
-
