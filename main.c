@@ -169,7 +169,7 @@ void verificarColisao(){
         }
 
         // Checa colisão de obstáculo com a aeronave
-        if (p->tipo != 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
+        if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
             vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
