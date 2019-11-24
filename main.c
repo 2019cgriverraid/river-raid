@@ -3,7 +3,6 @@
 #include <math.h>
 
 #include "util.c"
-#include "controle.c"
 #include "desenhos.c"
 #include "textura.c"
 
@@ -181,6 +180,8 @@ void verificarColisao(){
         if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
             aviao.combustivel = (aviao.combustivel + 6) > 30 ? 30 : aviao.combustivel + 6;
             combRecente = 1;
+            p->posY = win + LIXO; // seta posição y fixa para remoção
+            remover(&objetos, p->posX, win);
         }
 
 

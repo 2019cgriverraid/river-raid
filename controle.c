@@ -10,7 +10,7 @@ char *message = defaultMessage;
 void
 gameOver(int x, int y, char *string){
   int len, i;
-  glRasterPos3f(x, y, 10.0);
+  glRasterPos3f(x, y, 8.0);
   len = (int) strlen(string);
   font = GLUT_BITMAP_TIMES_ROMAN_24;
   for (i = 0; i < len; i++) {

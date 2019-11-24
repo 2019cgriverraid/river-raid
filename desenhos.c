@@ -1,5 +1,5 @@
 #include <GL/glut.h>
-
+#include "controle.c"
 void desenhaAeronave(){
    glPushMatrix();
 
@@ -158,53 +158,43 @@ void desenhaTiro(){
 void desenharPostoCombustivel(GLfloat x, GLfloat y){
     glPushMatrix();
 
-    glColor3f(1.0, 0.0, 0.0);
+    //glColor3f(1.0, 1.0, 1.0);
+    //gameOver(x-0.1, y+0.1, "F");
+    //glColor3f(1.0, 1.0, 0.0);
 
+    glColor3f(1.0,0.0,0.0);
     GLfloat tam = 4.0;
 
-    glTranslatef(x, y, 0.0);
-
-    glBegin(GL_POLYGON);
-    glVertex3f(-tam, -tam, tam);
-    glVertex3f(tam, -tam, tam);
-    glVertex3f(tam, tam, tam);
-    glVertex3f(-tam, tam, tam);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(tam, tam, tam);
-    glVertex3f(tam, -tam, tam);
-    glVertex3f(tam, -tam, -tam);
-    glVertex3f(tam, tam, -tam);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(tam, -tam, tam);
-    glVertex3f(-tam, -tam, tam);
-    glVertex3f(-tam, -tam, -tam);
-    glVertex3f(tam, -tam, -tam);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(-tam, tam, tam);
-    glVertex3f(tam, tam, tam);
-    glVertex3f(tam, tam, -tam);
-    glVertex3f(-tam, tam, -tam);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(-tam, -tam, -tam);
-    glVertex3f(-tam, tam, -tam);
-    glVertex3f(tam, tam, -tam);
-    glVertex3f(tam, -tam, -tam);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3f(-tam, tam, -tam);
-    glVertex3f(-tam, -tam, -tam);
-    glVertex3f(-tam, -tam, tam);
-    glVertex3f(-tam, tam, tam);
-    glEnd();
+    glTranslatef(x, y-0.5, 0.0);
+    glRotatef(0.0,0.0,90.0, 1.0);
+    GLUquadricObj *quadObj;
+    quadObj = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj, GLU_FILL);
+    gluQuadricNormals (quadObj, GLU_SMOOTH);
+    gluCylinder (quadObj, 4.0, 4.0, 3.0, 24, 4);
+    glTranslatef(0.0,1.5,0.0);
+    glColor3f(1.0,1.0,1.0);
+    GLUquadricObj *quadObj2;
+    quadObj2 = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj2, GLU_FILL);
+    gluQuadricNormals (quadObj2, GLU_SMOOTH);
+    gluCylinder (quadObj2, 4.0, 4.0, 3.0, 24, 4);
+    glTranslatef(0.0,1.5,0.0);
+    glColor3f(1.0,0.0,0.0);
+    GLUquadricObj *quadObj3;
+    quadObj3 = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj3, GLU_FILL);
+    gluQuadricNormals (quadObj3, GLU_SMOOTH);
+    gluCylinder (quadObj3, 4.0, 4.0, 3.0, 24, 4);
+    glTranslatef(0.0,1.5,0.0);
+    glColor3f(1.0,1.0,1.0);
+    GLUquadricObj *quadObj4;
+    quadObj4 = gluNewQuadric ();
+    gluQuadricDrawStyle (quadObj4, GLU_FILL);
+    gluQuadricNormals (quadObj4, GLU_SMOOTH);
+    gluCylinder (quadObj4, 4.0, 4.0, 3.0, 24, 4);
+    glTranslatef(0.0,4.0,0.0);
+    
 
     glPopMatrix();
 }
