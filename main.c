@@ -15,6 +15,7 @@ GLfloat win = 50;
 GLfloat scenicMove = 0.0;
 GLfloat anglex = 250.0;
 GLfloat width_wall = 9.0;
+int warning = 0;
 
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -120,7 +121,9 @@ void aeronave(){
     glPushMatrix();
         glTranslatef(aviao.x, aviao.y, 0.0); //leva o aviao para baixo na tela
         glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o aviao para os lados em direção ao eixo x quando ele se movimentar
-        desenhaAeronave();
+        if(warning > 0) desenhaAeronaveVermelha();
+        else desenhaAeronave();
+        
     glPopMatrix();
 
     if (tiro){
@@ -164,7 +167,7 @@ void verificarColisao(){
 
         // Checa colisão de obstáculo com a aeronave
         if (p->tipo != 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
-            vidas -= 1;
+            vidas -= 1; warning = 8;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
             if (vidas < 1){ 
@@ -319,7 +322,7 @@ void controle(int key, int xx, int yy){
         break;
     case GLUT_KEY_LEFT:
         if (aviao.x - 4 <= -win + width_wall + 0.5){
-            vidas -= 1;
+            vidas -= 1; warning = 8;
             if(vidas < 1) { fimDeJogo = 1;} // Jogo acaba se sim
             else{ 
                 aviao.combustivel = 30;
@@ -333,7 +336,7 @@ void controle(int key, int xx, int yy){
         break;
     case GLUT_KEY_RIGHT:
         if (aviao.x + 4 >= win - width_wall - 0.5){
-            vidas -= 1;
+            vidas -= 1; warning = 8;
             if(vidas < 1){ fimDeJogo = 1; }// Jogo acaba se sim
             else{ 
                 aviao.combustivel = 30;
@@ -410,10 +413,11 @@ void movimentarObjetosSecundarios(){
 // Executa a cada 10ms inicialmente, cria e movimenta os objetos, além de verificar a colisão
 // TO DO: fazer variar o tempo de acordo com o nivel que o jogador está
 void movimentarPorTempo(){
+    if(warning > 0) warning -= 1;
     if (!fimDeJogo)
     {
         if(aviao.combustivel <= 0){
-            vidas -= 1;
+            vidas -= 1; warning = 8;
             
             if (vidas < 1){
                 fimDeJogo = 1; 
