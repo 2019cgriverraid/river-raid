@@ -193,7 +193,7 @@ void verificarColisao(){
 
 
         // Checa se o objeto não passou da fronteira inferior da janela
-        if (p->posY < -win)
+        if (p->posY < -win-3.0)
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
 
