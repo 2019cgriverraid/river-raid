@@ -42,50 +42,16 @@ void init(){
     glPushMatrix();
 }
 
-void desenhaAeronave(){
+void desenhaHelicoptero(){
     
-    GLfloat asa[][3]={
-        {-4.0,0.0,0.0},
-        {+4.0,0.0,0.0},
-        {0.0,0.0,3.0}
-    };
-
-    GLfloat cauda[][3]={
-        {0.0,0.5,0.0},
-        {0.0,2.0,0.0},
-        {0.0,1.6,0.9},
-        {0.0,0.0,2.0}
-    };
-
     GLUquadricObj *quadric;
     glColor3f(1.0,1.0,1.0);
-/*
-    //asas
-    glPushMatrix();
-        glRotatef(90, 1.0, 0.0, 0.0);
-        glTranslatef(0,0,2);
-        glBegin(GL_TRIANGLES); 
-            glVertex3fv(asa[0]);
-            glVertex3fv(asa[1]);
-            glVertex3fv(asa[2]);
-        glEnd();
-    glPopMatrix();
+    glRotatef(5, 1.0, 0.0, 0.0);
 
-    //cauda
-    glPushMatrix();
-        glTranslatef(0,0,5);
-        glBegin(GL_POLYGON); 
-            glVertex3fv(cauda[0]);
-            glVertex3fv(cauda[1]);
-            glVertex3fv(cauda[2]);
-            glVertex3fv(cauda[3]);
-        glEnd();
-    glPopMatrix();
-*/
     //cauda
     glPushMatrix();
         glRotatef(-10, 1, 0, 0);
-        glTranslatef(0,0.8,0);
+        glTranslatef(0,0.5,0);
         glTranslatef(0,0,1.8);
         quadric = gluNewQuadric();
         gluCylinder(quadric, 0.9, 0.3, 3.7, 20, 20);
@@ -95,24 +61,89 @@ void desenhaAeronave(){
     glPushMatrix();
         glutSolidSphere(2.5, 15, 15);
     glPopMatrix(); 
+    
+    //base da helice
+    glPushMatrix();
+        glTranslatef(0.0, 2.4, 0.0);
+        glRotatef(-90, 1, 0, 0);
+        quadric = gluNewQuadric();
+        gluCylinder(quadric, 0.5, 0.5, 1.0, 20, 20);
+    glPopMatrix();
 
 }
 
-void aeronave(){
+void desenhaHeliceMaior(GLint i){
+    glPushMatrix();
+    glRotatef(i, 0.0, 1.0, 0.0);
+    
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPopMatrix();
+}
+
+void desenhaHeliceMenor(GLint i){
+    glPushMatrix();
+
+    glPushMatrix();
+       glRotatef(90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 5.4, -1.5);
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glRotatef(90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 5.4, -1.5);
+
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPopMatrix();
+}
+
+int i = 0;
+void movimentarHelices(){
+
+    i+=1;
+    
+    desenhaHeliceMaior(i);
+    desenhaHeliceMenor(i);
+    glutPostRedisplay();
+    glutTimerFunc(1000, movimentarHelices, 1);
+}
+
+void helicoptero(){
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
 
-        //glTranslatef(x, y, 0.0);    
+        glRotatef(120, 0, 1, 0);
+        glRotatef(-20, 1, 0, 0);
+   
         glRotatef(rX,0,1,0);
         glRotatef(rY,1,0,0);
 
-        desenhaAeronave();
+        desenhaHelicoptero();
+        movimentarHelices();
 
     glPopMatrix();
 
     glutSwapBuffers();
 }
+
 
 void teclado(unsigned char key, int x, int y){
     switch(key){
@@ -139,7 +170,7 @@ int main ( int argc , char * argv [] ){
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition (50 ,100);
     glutInitWindowSize (600 ,600);
-    glutCreateWindow ("Avião");
+    glutCreateWindow ("Helicoptero");
 
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
@@ -155,8 +186,9 @@ int main ( int argc , char * argv [] ){
     glPopMatrix();
 
     init();
-    glutDisplayFunc(aeronave);
+    glutDisplayFunc(helicoptero);
     glutKeyboardFunc(teclado);
+    glutTimerFunc(10, movimentarHelices, 1);
     glutMainLoop ();
     return 0;
 }

@@ -1,5 +1,6 @@
 #include <GL/glut.h>
 #include "controle.c"
+
 void desenhaAeronave(){
    glPushMatrix();
 
@@ -282,3 +283,113 @@ void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
     glEnd();
     glPopMatrix();
 }
+
+void desenharHelicoptero(GLfloat x, GLfloat y){
+
+    //glPushMatrix();
+    //glTranslatef(x, y, 0.0); 
+    
+    GLUquadricObj *quadric;
+    glColor3f(1.0,1.0,1.0);
+    glRotatef(5, 1.0, 0.0, 0.0);
+
+    //cauda
+    glPushMatrix();
+        glRotatef(-10, 1, 0, 0);
+        glTranslatef(0 + x, 0.5 + y, 0);
+        glTranslatef(0 + x,0 + y, 1.8);
+        quadric = gluNewQuadric();
+        gluCylinder(quadric, 0.9, 0.3, 3.7, 20, 20);
+    glPopMatrix();
+
+    //corpo
+    glPushMatrix();
+        glutSolidSphere(2.5, 15, 15);
+    glPopMatrix(); 
+    
+    //helice
+    glPushMatrix();
+        glTranslatef(0.0 + x, 2.4 + y, 0.0);
+        glRotatef(-90, 1, 0, 0);
+        quadric = gluNewQuadric();
+        gluCylinder(quadric, 0.5, 0.5, 1.0, 20, 20);
+    glPopMatrix();
+  // glPopMatrix();
+
+    /*
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+
+    //helice menor
+    glRotatef(90, 1.0, 0.0, 0.0);
+    glTranslatef(0.0, 5.2, -1.5);
+
+    glPushMatrix();
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+    */
+
+
+}
+
+
+void desenhaHeliceMaior(GLint i){
+    glPushMatrix();
+    glRotatef(i, 0.0, 1.0, 0.0);
+    
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glTranslatef(0.0, 3.4, 0.0);
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(8, 0.2, 1.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPopMatrix();
+}
+
+void desenhaHeliceMenor(GLint i){
+    glPushMatrix();
+
+    glPushMatrix();
+       glRotatef(90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 5.4, -1.5);
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPushMatrix();
+        glRotatef(90, 1.0, 0.0, 0.0);
+        glTranslatef(0.0, 5.4, -1.5);
+
+        glRotatef(90, 0.0, 1.0, 0.0);
+        glScalef(3, 0.2, 0.5);
+        glutSolidCube(1);
+    glPopMatrix();
+
+    glPopMatrix();
+}
+
