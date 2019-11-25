@@ -37,14 +37,15 @@ long tempoNivel = 0;
 int nivel = 1;
 int highscore = 0;
 int ultimaPontuacao = 0;
-int horaDoCombustivel = 285; 
 int intervaloDoCombustivel = 285; 
+int horaDoCombustivel; 
+
 int tempoAuxComb = 0;
 int vidas = 3;
 
-int horaDoObstaculo = 100; // define o limite para a variável tempoAuxObstaculo, qd alcança, um obstáculo é criado
-int tempoAuxObstaculo = 0; // conta o tempo que se passou sem obstáculo
-int intervaloEntreObjetos = 100; // controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
+int intervaloEntreHelicopteros = 200; // controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
+int horaDoHelicoptero; // define o limite para a variável tempoAuxHelicoptero, qd alcança, um obstáculo é criado
+int tempoAuxHelicoptero = 0; // conta o tempo que se passou sem obstáculo
 
 // int horaDoHelicoptero = 100;
 // int tempoAuxHelicoptero = 0;
@@ -77,6 +78,12 @@ void inicializaAeronave(){
     auxQtdRot = 0;
     combRecente = 0;
     tempoAuxComb = 0;
+
+    tempoNivel = 0;
+    nivel = 1;
+    auxTempo = 0.0;
+    horaDoHelicoptero = intervaloEntreHelicopteros;
+    horaDoCombustivel = intervaloDoCombustivel;
 
     int i;
     for (i = 0; i < NUM_TIROS; i++){
@@ -281,10 +288,7 @@ void display(void){
             auxTempo += 1;
         else
         {
-            tempoNivel = 0;
-            nivel = 1;
             fimDeJogo = 0;
-            auxTempo = 0.0;
         }
     }
     glutSwapBuffers();
@@ -373,10 +377,10 @@ void controle(int key, int xx, int yy){
 
 // Cria novos objetos na lista de objetos, a partir do limite superior da tela
 void criarObjetosSecundarios(){
-    // Cria considerando o intervalo de tempo controlado pelas variáveis tempoAuxObstaculo e horaDoObstaculo
-    if (tempoAuxObstaculo == horaDoObstaculo){
+    // Cria considerando o intervalo de tempo controlado pelas variáveis tempoAuxHelicoptero e horaDoHelicoptero
+    if (tempoAuxHelicoptero == horaDoHelicoptero){
         inserir(&objetos, win, win - 2.0, 1, width_wall);
-        tempoAuxObstaculo = -intervaloEntreObjetos;
+        tempoAuxHelicoptero = 0;
     }
 
     if (tempoAuxComb == horaDoCombustivel){
@@ -416,23 +420,23 @@ void movimentarObjetosSecundarios(){
             if (p->posY<win){
                 GLfloat newPosX = 0;
                 if(!p->specialMov){
-                    newPosX = p->posX + (0.1*(nivel-1));
-                    if((p->movDist + (0.1*nivel)) > (4+nivel) || p->posX >= (win- width_wall - 3.8)){
+                    newPosX = p->posX + (0.075*(nivel-1));
+                    if((p->movDist + (0.075*(nivel-1)) ) > (2+nivel) || p->posX >= (win- width_wall - 3.8)){
                         p->specialMov = 1;
                     }
                     else{
                         p->posX = newPosX;
-                        p->movDist = p->movDist + (0.1*(nivel));
+                        p->movDist = p->movDist + (0.075*(nivel-1));
                     }
                 }
                 else{
-                    newPosX = p->posX - (0.1*(nivel-1));
-                    if(( (p->movDist - (0.1*nivel)) < (-4-nivel)) || (p->posX <= (-win + width_wall + 3.8) )){
+                    newPosX = p->posX - (0.075*(nivel-1));
+                    if(( (p->movDist - (0.075*(nivel-1)) ) < (-2-nivel)) || (p->posX <= (-win + width_wall + 3.8) )){
                         p->specialMov = 0;
                     }
                     else{
                         p->posX = newPosX;
-                        p->movDist = p->movDist - (0.1*(nivel));
+                        p->movDist = p->movDist - (0.075*(nivel-1));
                     }
                 }
             }
@@ -461,7 +465,7 @@ void movimentarPorTempo(){
             if(timerTiro > 0){
                 timerTiro = timerTiro - 1;
             }
-            tempoAuxObstaculo++;
+            tempoAuxHelicoptero++;
             tempoAuxComb++;
             if(!(tempoAuxComb % 50)) aviao.combustivel--;
             if(!(tempoAuxComb % 100)) combRecente = 0;
@@ -495,8 +499,7 @@ void movimentarPorTempo(){
             }
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
-        
-            //printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - LEVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
+            if(tempoNivel%25 == 0) printf("tempo: %d - horaDoHelicoptero: %d - horaDoCombustivel: %d - auxComb %d \n", tempoAuxHelicoptero, horaDoHelicoptero, horaDoCombustivel, tempoAuxComb);
         }
         tempoNivel += 1;
         if ((tempoNivel%(750+(nivel*25)))==0){
@@ -505,8 +508,12 @@ void movimentarPorTempo(){
                 levelClearedMessage = 24;
                 nivel += 1;
                 aviao.pontuacao += 500;
+                if (nivel > 2){
+                    horaDoHelicoptero = intervaloEntreHelicopteros - ((nivel-2)*17);
+                }
                 if(nivel > 3){
                     horaDoCombustivel = intervaloDoCombustivel + ((nivel-3)*15);
+                    
                 }
             }
         }

@@ -52,12 +52,12 @@ void inicializarLista(Lista *lista)
 // Imprime lista para conferência, auxiliar
 void imprimeLista(Lista *lista)
 {
-    Objeto *p = lista->inicio;
-    while (p != NULL)
-    {
-        printf("(%.2f, %.2f)\n", p->posX, p->posY);
-        p = p->prox;
-    }
+    // Objeto *p = lista->inicio;
+    // while (p != NULL)
+    // {
+    //     printf("(%.2f, %.2f)\n", p->posX, p->posY);
+    //     p = p->prox;
+    // }
 }
 // Calcula a distância entre dois pontos (px, py) e (qx, qy)
 float dist(GLfloat px, GLfloat py, GLfloat qx, GLfloat qy)
