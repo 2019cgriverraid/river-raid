@@ -16,6 +16,7 @@ GLfloat anglex = 250.0;
 GLfloat width_wall = 9.0;
 int warning = 0;
 int levelClearedMessage = 0;
+int helicesRotacao = 0;
 
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -45,9 +46,9 @@ int horaDoObstaculo = 100; // define o limite para a variável tempoAuxObstaculo
 int tempoAuxObstaculo = 0; // conta o tempo que se passou sem obstáculo
 int intervaloEntreObjetos = 100; // controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
 
-int horaDoHelicoptero = 100;
-int tempoAuxHelicoptero = 0;
-int intervaloEntreHelicopteros = 100;
+// int horaDoHelicoptero = 100;
+// int tempoAuxHelicoptero = 0;
+// int intervaloEntreHelicopteros = 100;
 
 int tempoRolagem = 10;
 
@@ -141,37 +142,6 @@ void aeronave(){
     }
 }
 
-int i = 0;
-void movimentarHelices(){
-
-    i+=1;
-    
-    desenhaHeliceMaior(i);
-    desenhaHeliceMenor(i);
-    glutPostRedisplay();
-    glutTimerFunc(10, movimentarHelices, 1);
-}
-
-void helicoptero(GLfloat x, GLfloat y){
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glPushMatrix();
-
-        glRotatef(120, 0, 1, 0);
-        glRotatef(-20, 1, 0, 0);
-
-
-        desenharHelicoptero(x, y);
-        movimentarHelices();
-    glPopMatrix();
-
-    glutSwapBuffers();
-
-}
-
-
-
 // Verifica se ocorreu a colisão tiro-obstaculo e aviao-obstaculo
 void verificarColisao(){
     int i;
@@ -245,10 +215,10 @@ void desenharObjetos(){
             if (p->tipo == 0)
                 desenharPostoCombustivel(p->posX, p->posY);
             else if (p->tipo == 1)
-                desenharInimigo(p->posX, p->posY);
-            else if(p->tipo == 2){
-                helicoptero(p->posX, p->posY);
-            }
+                desenharHelicoptero(p->posX, p->posY, helicesRotacao);
+            // else if(p->tipo == 2){
+            //     helicoptero(p->posX, p->posY);
+            // }
             else if (p->tipo == 4)
                 animacaoPostoCombustivel(p->posX, p->posY);
         }
@@ -414,15 +384,16 @@ void criarObjetosSecundarios(){
         tempoAuxComb = 0;
     }
 
-    if (tempoAuxHelicoptero == horaDoHelicoptero){
-        inserir(&objetos, win, win - 2.0, 2, width_wall);
-        tempoAuxHelicoptero =- intervaloEntreHelicopteros;
-    }
+    // if (tempoAuxHelicoptero == horaDoHelicoptero){
+    //     inserir(&objetos, win, win - 2.0, 2, width_wall);
+    //     tempoAuxHelicoptero =- intervaloEntreHelicopteros;
+    // }
 }
 
 // Movimenta para baixo os objetos que não foram atingidos
 void movimentarObjetosSecundarios(){
     Objeto *p = objetos.inicio;
+    helicesRotacao += 1;
 
     while (p != NULL)
     {

@@ -312,10 +312,7 @@ void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
     glPopMatrix();
 }
 
-void desenharHelicoptero(GLfloat x, GLfloat y){
-
-    //glPushMatrix();
-    //glTranslatef(x, y, 0.0); 
+void desenhaHelicoptero(){
     
     GLUquadricObj *quadric;
     glColor3f(1.0,1.0,1.0);
@@ -324,8 +321,8 @@ void desenharHelicoptero(GLfloat x, GLfloat y){
     //cauda
     glPushMatrix();
         glRotatef(-10, 1, 0, 0);
-        glTranslatef(0 + x, 0.5 + y, 0);
-        glTranslatef(0 + x,0 + y, 1.8);
+        glTranslatef(0,0.5,0);
+        glTranslatef(0,0,1.8);
         quadric = gluNewQuadric();
         gluCylinder(quadric, 0.9, 0.3, 3.7, 20, 20);
     glPopMatrix();
@@ -335,49 +332,15 @@ void desenharHelicoptero(GLfloat x, GLfloat y){
         glutSolidSphere(2.5, 15, 15);
     glPopMatrix(); 
     
-    //helice
+    //base da helice
     glPushMatrix();
-        glTranslatef(0.0 + x, 2.4 + y, 0.0);
+        glTranslatef(0.0, 2.4, 0.0);
         glRotatef(-90, 1, 0, 0);
         quadric = gluNewQuadric();
         gluCylinder(quadric, 0.5, 0.5, 1.0, 20, 20);
     glPopMatrix();
-  // glPopMatrix();
-
-    /*
-    glPushMatrix();
-        glTranslatef(0.0, 3.4, 0.0);
-        glScalef(8, 0.2, 1.5);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glTranslatef(0.0, 3.4, 0.0);
-        glRotatef(90, 0.0, 1.0, 0.0);
-        glScalef(8, 0.2, 1.5);
-        glutSolidCube(1);
-    glPopMatrix();
-
-
-    //helice menor
-    glRotatef(90, 1.0, 0.0, 0.0);
-    glTranslatef(0.0, 5.2, -1.5);
-
-    glPushMatrix();
-        glScalef(3, 0.2, 0.5);
-        glutSolidCube(1);
-    glPopMatrix();
-
-    glPushMatrix();
-        glRotatef(90, 0.0, 1.0, 0.0);
-        glScalef(3, 0.2, 0.5);
-        glutSolidCube(1);
-    glPopMatrix();
-    */
-
 
 }
-
 
 void desenhaHeliceMaior(GLint i){
     glPushMatrix();
@@ -421,3 +384,32 @@ void desenhaHeliceMenor(GLint i){
     glPopMatrix();
 }
 
+
+void movimentarHelices(int i){
+    // i += 1;
+    desenhaHeliceMaior(i);
+    desenhaHeliceMenor(i);
+}
+
+
+void helicoptero(GLfloat tX, GLfloat tY, GLfloat rX, GLfloat rY, int i){
+
+    
+    glPushMatrix();
+        glTranslatef(tX, tY, 5.0);
+
+        glRotatef(120, 0, 1, 0);
+        glRotatef(-20, 1, 0, 0);
+   
+        glRotatef(rX,0,1,0);
+        glRotatef(rY,1,0,0);
+
+        desenhaHelicoptero();
+        movimentarHelices(i);
+
+    glPopMatrix();
+
+}
+void desenharHelicoptero(GLfloat tX, GLfloat tY, int i){
+    helicoptero(tX, tY, 0.0, 0.0, i);
+}
