@@ -189,7 +189,7 @@ void verificarColisao(){
         if (p->tipo == 0 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5 && combRecente == 0){
             float xAnimation = p->posX;
             float yAnimation = p->posY + 5.0;
-            aviao.combustivel = (aviao.combustivel + 8) > 30 ? 30 : aviao.combustivel + 8;
+            aviao.combustivel = (aviao.combustivel + 10) > 30 ? 30 : aviao.combustivel + 10;
             combRecente = 1;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
