@@ -209,18 +209,34 @@ void verificarColisao(){
             }
         }
 
+        //TODO: tirar vidas em caso de contato com a grama
         if(p->tipo == 6){
-            if(dist(win - 5.5*width_wall, p->posY, aviao.x, aviao.y) < 4){
+            if(win/2 + p->posY <= aviao.y && aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall){// - 7*width_wall && aviao.x <){
                 vidas -= 1; warning = 8; tempoNivel = 0;
+
+                Objeto *p2 = objetos.inicio;
+                while(p != NULL){
+
+                }
+
                 if (vidas < 1) {
                     fimDeJogo = 1; // Jogo acaba se sim
                 }
                 else aviao.combustivel = 30;
             }
+            /*if(dist(win - 5.5*width_wall, p->posY, aviao.x, aviao.y) < 4){
+                aux_colisao_centro = 1;
+                vidas -= 1; warning = 8; tempoNivel = 0;
+                if (vidas < 1) {
+                    fimDeJogo = 1; // Jogo acaba se sim
+                }
+                else aviao.combustivel = 30;
+            }*/
         }   
 
         // Checa colisão de obstáculo com a aeronave
         if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 7){
+            
             vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             if(p->tipo != 6)
