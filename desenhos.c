@@ -315,7 +315,9 @@ void desenhaAgua(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat y){
 void desenhaHelicoptero(){
     
     GLUquadricObj *quadric;
-    glColor3f(1.0,1.0,1.0);
+    glPushMatrix();
+    glColor3f(0.2, 0.9, 0.0);
+    //glColor3f(1.0,1.0,1.0);
     glRotatef(5, 1.0, 0.0, 0.0);
 
     //cauda
@@ -339,11 +341,13 @@ void desenhaHelicoptero(){
         quadric = gluNewQuadric();
         gluCylinder(quadric, 0.5, 0.5, 1.0, 20, 20);
     glPopMatrix();
+    glPopMatrix();
 
 }
 
 void desenhaHeliceMaior(GLint i){
     glPushMatrix();
+    glColor3f(0.15,0.4,0.15);
     glRotatef(i, 0.0, 1.0, 0.0);
     
     glPushMatrix();
@@ -364,7 +368,7 @@ void desenhaHeliceMaior(GLint i){
 
 void desenhaHeliceMenor(GLint i){
     glPushMatrix();
-
+    glColor3f(0.15,0.45,0.15);
     glPushMatrix();
        glRotatef(90, 1.0, 0.0, 0.0);
         glTranslatef(0.0, 5.4, -1.5);
@@ -396,6 +400,7 @@ void helicoptero(GLfloat tX, GLfloat tY, GLfloat rX, GLfloat rY, int i){
 
     
     glPushMatrix();
+       
         glTranslatef(tX, tY, 5.0);
 
         glRotatef(120, 0, 1, 0);
