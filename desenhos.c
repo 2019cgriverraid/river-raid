@@ -188,13 +188,13 @@ void desenharPostoCombustivel(GLfloat x, GLfloat y){
     gluQuadricNormals (quadObj3, GLU_SMOOTH);
     gluCylinder (quadObj3, 4.0, 4.0, 3.0, 24, 4);
     glTranslatef(0.0,1.5,0.0);
-    glColor3f(1.0,1.0,1.0);
-    GLUquadricObj *quadObj4;
-    quadObj4 = gluNewQuadric ();
-    gluQuadricDrawStyle (quadObj4, GLU_FILL);
-    gluQuadricNormals (quadObj4, GLU_SMOOTH);
-    gluCylinder (quadObj4, 4.0, 4.0, 3.0, 24, 4);
-    glTranslatef(0.0,4.0,0.0);
+    // glColor3f(1.0,1.0,1.0);
+    // GLUquadricObj *quadObj4;
+    // quadObj4 = gluNewQuadric ();
+    // gluQuadricDrawStyle (quadObj4, GLU_FILL);
+    // gluQuadricNormals (quadObj4, GLU_SMOOTH);
+    // gluCylinder (quadObj4, 4.0, 4.0, 3.0, 24, 4);
+    // glTranslatef(0.0,4.0,0.0);
     
 
     glPopMatrix();
@@ -401,7 +401,7 @@ void helicoptero(GLfloat tX, GLfloat tY, GLfloat rX, GLfloat rY, int i){
     
     glPushMatrix();
        
-        glTranslatef(tX, tY, 5.0);
+        glTranslatef(tX-2.0, tY-2.0, 5.0);
 
         glRotatef(120, 0, 1, 0);
         glRotatef(-20, 1, 0, 0);

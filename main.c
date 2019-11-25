@@ -81,7 +81,6 @@ void inicializaAeronave(){
 
     tempoNivel = 0;
     nivel = 1;
-    auxTempo = 0.0;
     horaDoHelicoptero = intervaloEntreHelicopteros;
     horaDoCombustivel = intervaloDoCombustivel;
 
@@ -158,7 +157,7 @@ void verificarColisao(){
         for (i = 0; i < NUM_TIROS; i++){
 
             // Checa colisão do tiro
-            if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 4){
+            if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 5){
                 timerTiro = 0;
 
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
@@ -181,7 +180,7 @@ void verificarColisao(){
         }
 
         // Checa colisão de obstáculo com a aeronave
-        if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 4){
+        if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5){
             vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
@@ -284,10 +283,13 @@ void display(void){
         sprintf(msgh, "%s %d", msgh, highscore);
         gameOver(-win/2, 0, msgh);
         gameOver(-win/2, 10, "GAME OVER");
-        if (auxTempo < 100)
+        if (auxTempo < 100){
+            
             auxTempo += 1;
+        }
         else
-        {
+        {   
+            auxTempo = 0;
             fimDeJogo = 0;
         }
     }
