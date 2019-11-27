@@ -18,6 +18,8 @@ int warning = 0;
 int levelClearedMessage = 0;
 int helicesRotacao = 0;
 
+GLfloat centralMove = 0.0;
+int aux_colisao_centro = 0;
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 2.0f, 2.0f, 2.0f, 2.0f };
@@ -50,6 +52,10 @@ int tempoAuxHelicoptero = 0; // conta o tempo que se passou sem obstáculo
 // int horaDoHelicoptero = 100;
 // int tempoAuxHelicoptero = 0;
 // int intervaloEntreHelicopteros = 100;
+
+int horaDoGramadoCentral = 300;
+int tempoAuxGramadoCentral = 0;
+int intervaloEntreGramadosCentrais = 100;
 
 int tempoRolagem = 10;
 
@@ -179,11 +185,46 @@ void verificarColisao(){
             }
         }
 
+        if(p->tipo == 6){
+
+            if( 1 * win/2 + p->posY <= aviao.y && 3 * win/2 + p->posY >= aviao.y) {
+
+                if(aviao.x >= win - 7*width_wall - 3 && aviao.x <=  win - 7*width_wall)
+                {
+                    aviao.x -= 3;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                    aux_colisao_centro = 0;
+                }
+                    
+                if(aviao.x >= win - 4*width_wall && aviao.x <= win - 4*width_wall + 3)
+                {
+                    aviao.x += 3;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                    aux_colisao_centro = 0;
+                }
+
+                /*if(aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall)
+                {
+                    aux_colisao_centro = 1;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                }*/
+
+                //TODO: fazer contato lateral fazendo aviao do jogador bater e volta mais para o lado
+
+                if (vidas < 1) {
+                    fimDeJogo = 1; // Jogo acaba se sim
+                }
+                else aviao.combustivel = 30;
+            }
+        }   
+
         // Checa colisão de obstáculo com a aeronave
-        if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5){
+        if (p->tipo != 0 && p->tipo != 4 && p->tipo != 6 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5){
+            
             vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
-            remover(&objetos, p->posX, win);
+            if(p->tipo != 6)
+                remover(&objetos, p->posX, win);
             if (vidas < 1){ 
                 fimDeJogo = 1; // Jogo acaba se sim
             }
@@ -202,14 +243,29 @@ void verificarColisao(){
             inserirPos(&objetos, xAnimation, yAnimation, 4, width_wall);
         }
 
-
-        // Checa se o objeto não passou da fronteira inferior da janela
-        if (p->posY < -win-3.0)
-            p->posY = win + LIXO; // seta posição y fixa para remoção
-            remover(&objetos, p->posX, win);
-
+        if(p->tipo != 6){
+            // Checa se o objeto não passou da fronteira inferior da janela
+            if (p->posY < -win-3.0)
+                p->posY = win + LIXO; // seta posição y fixa para remoção
+                remover(&objetos, p->posX, win);
+        }
+        else{
+            if (p->posY < -win-80.0)
+                p->posY = win + LIXO;
+                remover(&objetos, p->posX, win);
+    
+        }
         p = p->prox;
     }
+
+    Objeto *p2 = objetos.inicio;
+    if(aux_colisao_centro == 1)
+        while (p2 != NULL){
+            p2->posY += 35;
+            p2 = p2->prox;
+        }
+            
+    aux_colisao_centro = 0;
 }
 
 // Desenha objetos obstáulo
@@ -227,6 +283,11 @@ void desenharObjetos(){
             // }
             else if (p->tipo == 4)
                 animacaoPostoCombustivel(p->posX, p->posY);
+            /*else if (p->tipo == 6){
+                glEnable(GL_TEXTURE_2D);
+                    desenharGramadoCentral(win, width_wall, texture_id1, 0, p->posY);
+                glDisable(GL_TEXTURE_2D);
+            }*/
         }
         p = p->prox;
     }
@@ -261,6 +322,7 @@ void display(void){
         desenhaParedeEsquerda(win, width_wall, texture_id1, scenicMove);
         desenhaParedeDireita(win, width_wall, texture_id1,scenicMove);
         desenhaAgua(win, width_wall, texture_id2,scenicMove);
+        //desenharGramadoCentral(win,width_wall,texture_id1,0,);
         glDisable(GL_TEXTURE_2D);
         
         desenharObjetos();
@@ -394,6 +456,11 @@ void criarObjetosSecundarios(){
     //     inserir(&objetos, win, win - 2.0, 2, width_wall);
     //     tempoAuxHelicoptero =- intervaloEntreHelicopteros;
     // }
+
+    if(tempoAuxGramadoCentral == horaDoGramadoCentral){
+        inserir(&objetos, win, centralMove, 6, width_wall);
+        tempoAuxGramadoCentral =- intervaloEntreGramadosCentrais;
+    }
 }
 
 // Movimenta para baixo os objetos que não foram atingidos
@@ -469,13 +536,16 @@ void movimentarPorTempo(){
             }
             tempoAuxHelicoptero++;
             tempoAuxComb++;
+            tempoAuxGramadoCentral++;
             if(!(tempoAuxComb % 50)) aviao.combustivel--;
             if(!(tempoAuxComb % 100)) combRecente = 0;
                 
 
             criarObjetosSecundarios();
-            movimentarObjetosSecundarios();
+            movimentarObjetosSecundarios();            
             verificarColisao();
+
+            
 
             if(aviao.rotX == auxRot) auxQtdRot++;
             else{
@@ -502,6 +572,11 @@ void movimentarPorTempo(){
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
             if(tempoNivel%25 == 0) printf("tempo: %d - horaDoHelicoptero: %d - horaDoCombustivel: %d - auxComb %d \n", tempoAuxHelicoptero, horaDoHelicoptero, horaDoCombustivel, tempoAuxComb);
+
+            centralMove = (centralMove + 0.2);
+            if(centralMove > (win*15.5)) centralMove = -win*1.25;   
+        
+            //printf("tempo: %d - COMBUSTÍVEL: %d - PONTUAÇÃO: %d - LEVEL %d \n", tempoAuxComb, aviao.combustivel, aviao.pontuacao, nivel);
         }
         tempoNivel += 1;
         if ((tempoNivel%(750+(nivel*25)))==0){

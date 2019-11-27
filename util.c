@@ -92,9 +92,28 @@ void inserir(Lista *lista, int winX, int winY, int tipo, int width_wall)
     novo->prox = NULL;
     novo->tipo = tipo;
 
-    do
-    {
-        novo->posX = (rand() % ( (2 * winX) - (2 * width_wall) - 8) ) - winX + width_wall + 4.0; //calcula pra setar uma posição x aleatória dentro da parte azul
+    do{
+        Objeto *p = lista->inicio;
+        int aux_gramado = 0;
+        while(p != NULL){
+            if (p->tipo == 6){  //se houver um gramado central, escolhe entre valor de x a esquerda ou a direita do gramado central
+                aux_gramado = 1;
+            }
+            p = p->prox;
+        }
+
+        if(aux_gramado == 1){
+            int posx[2];
+            posx[0] = (rand() % ((winX-7*width_wall) - (-winX + width_wall)))  + width_wall + 4.0;// esquerda
+            posx[1] = (rand() % ((winX-width_wall)-(winX-4*width_wall))) + 2 * winX - width_wall - 4.0; //direita
+            novo->posX = posx[rand() % 2];
+        }    
+
+        else
+            novo->posX = (rand() % ( (2 * winX) - (2 * width_wall) - 8) ) - winX + width_wall + 4.0; //calcula pra setar uma posição x aleatória dentro da parte azul
+        
+        aux_gramado = 0;
+
         novo->posY = winY+13.0;
         novo -> specialMov = 0.0;
         novo -> movDist = 0.0;

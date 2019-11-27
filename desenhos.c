@@ -418,3 +418,20 @@ void helicoptero(GLfloat tX, GLfloat tY, GLfloat rX, GLfloat rY, int i){
 void desenharHelicoptero(GLfloat tX, GLfloat tY, int i){
     helicoptero(tX, tY, 0.0, 0.0, i);
 }
+
+void desenharGramadoCentral(GLfloat win, GLfloat width_wall, GLuint texture_id, GLfloat x, GLfloat y){
+    glPushMatrix();
+        glTranslatef(0,y,0);
+
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        GLfloat aux_esq = win - 7*width_wall;
+        GLfloat aux_dir = win - 4*width_wall;
+        glBegin(GL_POLYGON);
+            glColor3f(0.0, 1.0, 0.0);
+            glTexCoord2f(0.0f, 0.0f); glVertex3f(aux_esq, 1 * win/2,  -0.8);
+            glTexCoord2f(1.0f, 0.0f); glVertex3f(aux_esq, 3 * win/2,  -0.8);
+            glTexCoord2f(0.0f, 1.0f); glVertex3f(aux_dir, 3 * win/2,  -0.8);
+            glTexCoord2f(1.0f, 1.0f); glVertex3f(aux_dir, 1 * win/2,  -0.8);
+        glEnd();
+    glPopMatrix();
+}
