@@ -51,9 +51,9 @@ int horaDoHelicoptero = 100;
 int tempoAuxHelicoptero = 0;
 int intervaloEntreHelicopteros = 100;
 
-int horaDoGramadoCentral = 200;
+int horaDoGramadoCentral = 400;
 int tempoAuxGramadoCentral = 0;
-int intervaloEntreGramadosCentrais = 300;
+int intervaloEntreGramadosCentrais = 400;
 
 int tempoRolagem = 10;
 
@@ -209,33 +209,41 @@ void verificarColisao(){
             }
         }
 
-        //TODO: tirar vidas em caso de contato com a grama
         if(p->tipo == 6){
-            if(win/2 + p->posY <= aviao.y && aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall){// - 7*width_wall && aviao.x <){
-                vidas -= 1; warning = 8; tempoNivel = 0;
 
-                Objeto *p2 = objetos.inicio;
-                while(p != NULL){
+            if( 1 * win/2 + p->posY <= aviao.y && 3 * win/2 + p->posY >= aviao.y) {
 
+                if(aviao.x >= win - 7*width_wall - 3 && aviao.x <=  win - 7*width_wall)
+                {
+                    aviao.x -= 3;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                    aux_colisao_centro = 0;
                 }
+                    
+                if(aviao.x >= win - 4*width_wall && aviao.x <= win - 4*width_wall + 3)
+                {
+                    aviao.x += 3;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                    aux_colisao_centro = 0;
+                }
+
+                /*if(aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall)
+                {
+                    aux_colisao_centro = 1;
+                    vidas -= 1; warning = 8; tempoNivel = 0;
+                }*/
+
+                //TODO: fazer contato lateral fazendo aviao do jogador bater e volta mais para o lado
 
                 if (vidas < 1) {
                     fimDeJogo = 1; // Jogo acaba se sim
                 }
                 else aviao.combustivel = 30;
             }
-            /*if(dist(win - 5.5*width_wall, p->posY, aviao.x, aviao.y) < 4){
-                aux_colisao_centro = 1;
-                vidas -= 1; warning = 8; tempoNivel = 0;
-                if (vidas < 1) {
-                    fimDeJogo = 1; // Jogo acaba se sim
-                }
-                else aviao.combustivel = 30;
-            }*/
         }   
 
         // Checa colisão de obstáculo com a aeronave
-        if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 7){
+        if (p->tipo != 0 && p->tipo != 4 && p->tipo != 6 && dist(p->posX, p->posY, aviao.x, aviao.y) < 7){
             
             vidas -= 1; warning = 8; tempoNivel = 0;
             p->posY = win + LIXO; // seta posição y fixa para remoção
@@ -266,13 +274,22 @@ void verificarColisao(){
                 remover(&objetos, p->posX, win);
         }
         else{
-            if (p->posY < -win-100.0)
+            if (p->posY < -win-80.0)
                 p->posY = win + LIXO;
                 remover(&objetos, p->posX, win);
     
         }
         p = p->prox;
     }
+
+    Objeto *p2 = objetos.inicio;
+    if(aux_colisao_centro == 1)
+        while (p2 != NULL){
+            p2->posY += 35;
+            p2 = p2->prox;
+        }
+            
+    aux_colisao_centro = 0;
 }
 
 // Desenha objetos obstáulo
@@ -548,8 +565,10 @@ void movimentarPorTempo(){
                 
 
             criarObjetosSecundarios();
-            movimentarObjetosSecundarios();
+            movimentarObjetosSecundarios();            
             verificarColisao();
+
+            
 
             if(aviao.rotX == auxRot) auxQtdRot++;
             else{
