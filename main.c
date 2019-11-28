@@ -191,23 +191,23 @@ void verificarColisao(){
 
                 if(aviao.x >= win - 7*width_wall - 3 && aviao.x <=  win - 7*width_wall)
                 {
-                    aviao.x -= 3;
+                    aviao.x -= 4;
                     vidas -= 1; warning = 8; tempoNivel = 0;
                     aux_colisao_centro = 0;
                 }
                     
                 if(aviao.x >= win - 4*width_wall && aviao.x <= win - 4*width_wall + 3)
                 {
-                    aviao.x += 3;
+                    aviao.x += 4;
                     vidas -= 1; warning = 8; tempoNivel = 0;
                     aux_colisao_centro = 0;
                 }
 
-                /*if(aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall)
+                if(aviao.x > win - 7*width_wall && aviao.x < win - 4*width_wall)
                 {
                     aux_colisao_centro = 1;
                     vidas -= 1; warning = 8; tempoNivel = 0;
-                }*/
+                }
 
                 //TODO: fazer contato lateral fazendo aviao do jogador bater e volta mais para o lado
 
@@ -283,11 +283,11 @@ void desenharObjetos(){
             // }
             else if (p->tipo == 4)
                 animacaoPostoCombustivel(p->posX, p->posY);
-            /*else if (p->tipo == 6){
+            else if (p->tipo == 6){
                 glEnable(GL_TEXTURE_2D);
                     desenharGramadoCentral(win, width_wall, texture_id1, 0, p->posY);
                 glDisable(GL_TEXTURE_2D);
-            }*/
+            }
         }
         p = p->prox;
     }
