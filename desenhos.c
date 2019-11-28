@@ -16,7 +16,7 @@ void desenhaAeronave(){
         {0.0, 0.0, 2.0}};
 
     GLUquadricObj *quadric;
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(1.0, 0.84, 0.0);
 
     //asas
     glPushMatrix();
@@ -316,7 +316,8 @@ void desenhaHelicoptero(){
     
     GLUquadricObj *quadric;
     glPushMatrix();
-    glColor3f(0.2, 0.9, 0.0);
+    glColor3f(0.18, 0.31, 0.31);
+    //glColor3f(0.2, 0.9, 0.0);
     //glColor3f(1.0,1.0,1.0);
     glRotatef(5, 1.0, 0.0, 0.0);
 
@@ -347,7 +348,7 @@ void desenhaHelicoptero(){
 
 void desenhaHeliceMaior(GLint i){
     glPushMatrix();
-    glColor3f(0.15,0.4,0.15);
+    glColor3f(0.66,0.66,0.66);
     glRotatef(i, 0.0, 1.0, 0.0);
     
     glPushMatrix();

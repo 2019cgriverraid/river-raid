@@ -270,8 +270,7 @@ void display(void){
     else{ // TELA AZUL
 
         if (auxTempo == 1.0)
-        {
-            
+        {            
             //printf("fim de jogo\n");
             inicializaAeronave();
             removerTudo(&objetos, win);
@@ -283,7 +282,7 @@ void display(void){
         sprintf(msgh, "%s %d", msgh, highscore);
         gameOver(-win/2, 0, msgh);
         gameOver(-win/2, 10, "GAME OVER");
-        if (auxTempo < 100){
+        if (auxTempo < 500){
             
             auxTempo += 1;
         }
@@ -399,7 +398,7 @@ void criarObjetosSecundarios(){
 // Movimenta para baixo os objetos que não foram atingidos
 void movimentarObjetosSecundarios(){
     Objeto *p = objetos.inicio;
-    helicesRotacao += 1;
+    helicesRotacao += 20;
 
     while (p != NULL)
     {
