@@ -70,7 +70,7 @@ void inicializaAeronave(){
     aviao.rotY = 0.0;
     if (aviao.pontuacao > highscore) highscore = aviao.pontuacao;
     ultimaPontuacao = aviao.pontuacao;
-    vidas = 3;
+    vidas = 30;
     aviao.pontuacao = 0;
     aviao.combustivel = 30;
 
