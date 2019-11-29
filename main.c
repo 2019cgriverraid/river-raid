@@ -78,6 +78,7 @@ void inicializaAeronave(){
     auxQtdRot = 0;
     combRecente = 0;
     tempoAuxComb = 0;
+    tempoAuxHelicoptero = 0; 
 
     tempoNivel = 0;
     nivel = 1;
@@ -242,7 +243,7 @@ void display(void){
         output(-win, win, msgp);
 
         char msgf[32] = "FUEL: ";
-        sprintf(msgf, "%s %d", msgf, aviao.combustivel);
+        sprintf(msgf, "%s %d", msgf, ((int)floor(aviao.combustivel*100/30)));
         output(-win, win-4.0, msgf);
 
         char msgn[32] = "LEVEL: ";
