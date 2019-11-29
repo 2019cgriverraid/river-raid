@@ -380,12 +380,12 @@ void controle(int key, int xx, int yy){
 // Cria novos objetos na lista de objetos, a partir do limite superior da tela
 void criarObjetosSecundarios(){
     // Cria considerando o intervalo de tempo controlado pelas variáveis tempoAuxHelicoptero e horaDoHelicoptero
-    if (tempoAuxHelicoptero == horaDoHelicoptero){
+    if (tempoAuxHelicoptero >= horaDoHelicoptero){
         inserir(&objetos, win, win - 2.0, 1, width_wall);
         tempoAuxHelicoptero = 0;
     }
 
-    if (tempoAuxComb == horaDoCombustivel){
+    if (tempoAuxComb >= horaDoCombustivel){
         inserir(&objetos, win, win - 2.0, 0, width_wall);
         tempoAuxComb = 0;
     }
