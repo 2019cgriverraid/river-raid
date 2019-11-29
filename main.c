@@ -70,7 +70,7 @@ void inicializaAeronave(){
     aviao.rotY = 0.0;
     if (aviao.pontuacao > highscore) highscore = aviao.pontuacao;
     ultimaPontuacao = aviao.pontuacao;
-    vidas = 30;
+    vidas = 3;
     aviao.pontuacao = 0;
     aviao.combustivel = 30;
 
@@ -157,7 +157,7 @@ void verificarColisao(){
         for (i = 0; i < NUM_TIROS; i++){
 
             // Checa colisão do tiro
-            if (dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 5){
+            if (p->tipo != 4 && dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 5){
                 timerTiro = 0;
 
                 aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
@@ -453,6 +453,8 @@ void movimentarPorTempo(){
     if (levelClearedMessage > 0) levelClearedMessage -= 1;
     if (!fimDeJogo)
     {
+        tempoAuxHelicoptero++;
+        tempoAuxComb++;
         if(aviao.combustivel <= 0){
             vidas -= 1; warning = 8; tempoNivel = 0;
             
@@ -466,12 +468,10 @@ void movimentarPorTempo(){
             if(timerTiro > 0){
                 timerTiro = timerTiro - 1;
             }
-            tempoAuxHelicoptero++;
-            tempoAuxComb++;
+            
             if(!(tempoAuxComb % 50)) aviao.combustivel--;
             if(!(tempoAuxComb % 100)) combRecente = 0;
                 
-
             criarObjetosSecundarios();
             movimentarObjetosSecundarios();
             verificarColisao();
@@ -517,6 +517,7 @@ void movimentarPorTempo(){
                     
                 }
             }
+            else aviao.pontuacao += 100;
         }
     }
     glutPostRedisplay();
