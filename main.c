@@ -43,13 +43,9 @@ int horaDoCombustivel;
 int tempoAuxComb = 0;
 int vidas = 3;
 
-int intervaloEntreHelicopteros = 200; // controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
-int horaDoHelicoptero; // define o limite para a variável tempoAuxHelicoptero, qd alcança, um obstáculo é criado
-int tempoAuxHelicoptero = 0; // conta o tempo que se passou sem obstáculo
-
-// int horaDoHelicoptero = 100;
-// int tempoAuxHelicoptero = 0;
-// int intervaloEntreHelicopteros = 100;
+int intervaloEntreHelicopteros = 200; // Controla o intervalo entre a aparição de cada obstáculo, pode ser alterada conforme o nível aumenta
+int horaDoHelicoptero; // Define o limite para a variável tempoAuxHelicoptero, qd alcança, um obstáculo é criado
+int tempoAuxHelicoptero = 0; // Conta o tempo que se passou sem obstáculo
 
 int tempoRolagem = 10;
 
@@ -97,20 +93,21 @@ void inicializaAeronave(){
 void init(void){
 
     glClearColor(0.3f, 0.0f, 1.0f, 1.0f);
+    
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);    //habilita o teste de profundidade
+    glEnable(GL_DEPTH_TEST);     // Habilita o teste de profundidade
     
 
-    glMatrixMode(GL_PROJECTION); //define que a matrix é a de projeção
-    glLoadIdentity();           //carrega a matrix de identidade
+    glMatrixMode(GL_PROJECTION); // Define que a matrix é a de projeção
+    glLoadIdentity();            // Carrega a matrix de identidade
     glOrtho((-win), (+win),
             (-win), (+win),
             (-win), (win));
 
     glMatrixMode(GL_MODELVIEW);
      gluLookAt(0.0,0.5,1.0,
-             0.0, 0.0, 0.0,   //para onde a câmera aponta (P_ref)
+             0.0, 0.0, 0.0,   // Para onde a câmera aponta (P_ref)
              0.0, 1.0, 0.0);
 
 
@@ -118,7 +115,6 @@ void init(void){
 
     inicializaAeronave();
     inicializarLista(&objetos);
-    //lighting(); //defininido os parâmetros de iluminação
 
     glGenTextures(1, &texture_id1);
 
@@ -127,12 +123,8 @@ void init(void){
 
 // Desenha aviao e tiros
 void aeronave(){
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-
     glPushMatrix();
-        glTranslatef(aviao.x, aviao.y, 0.0); //leva o aviao para baixo na tela
-        glRotatef(aviao.rotX, 0, 1, 0);      //será usado para rotacionar levemente o aviao para os lados em direção ao eixo x quando ele se movimentar
+        glTranslatef(aviao.x, aviao.y, 0.0); // Leva o aviao para baixo na tela
         if(warning > 0) desenhaAeronaveVermelha();
         else desenhaAeronave();
         
@@ -161,7 +153,7 @@ void verificarColisao(){
             if (p->tipo != 4 && dist(p->posX, p->posY, aviao.tiros[i].x, aviao.tiros[i].y) < 5){
                 timerTiro = 0;
 
-                aviao.tiros[i].x = -win - 5.0; // tira o tiro da tela
+                aviao.tiros[i].x = -win - 5.0; // Retira o tiro da tela
 
                 // Atribui pontuação de acordo com o tamanho do obstáculo
                 if (p->tipo == 0){
@@ -169,21 +161,16 @@ void verificarColisao(){
                 }
                 else if (p->tipo == 1)
                     aviao.pontuacao += 30;
-                else if (p->tipo == 2)
-                    aviao.pontuacao += 60;
-                // ...
 
-                p->posY = win + LIXO; // seta posição y fixa para remoção
+                p->posY = win + LIXO; // Seta posição y fixa para remoção
                 remover(&objetos, p->posX, win);
-
-                //printf("PONTUAÇÃO: %d\n", aviao.pontuacao);
             }
         }
 
         // Checa colisão de obstáculo com a aeronave
         if (p->tipo != 0 && p->tipo != 4 && dist(p->posX, p->posY, aviao.x, aviao.y) < 5){
             vidas -= 1; warning = 8; tempoNivel = 0;
-            p->posY = win + LIXO; // seta posição y fixa para remoção
+            p->posY = win + LIXO; // Seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
             if (vidas < 1){ 
                 fimDeJogo = 1; // Jogo acaba se sim
@@ -198,7 +185,7 @@ void verificarColisao(){
             float yAnimation = p->posY + 5.0;
             aviao.combustivel = (aviao.combustivel + 10) > 30 ? 30 : aviao.combustivel + 10;
             combRecente = 1;
-            p->posY = win + LIXO; // seta posição y fixa para remoção
+            p->posY = win + LIXO; // Seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
             inserirPos(&objetos, xAnimation, yAnimation, 4, width_wall);
         }
@@ -206,7 +193,7 @@ void verificarColisao(){
 
         // Checa se o objeto não passou da fronteira inferior da janela
         if (p->posY < -win-3.0)
-            p->posY = win + LIXO; // seta posição y fixa para remoção
+            p->posY = win + LIXO; // Seta posição y fixa para remoção
             remover(&objetos, p->posX, win);
 
         p = p->prox;
@@ -223,9 +210,6 @@ void desenharObjetos(){
                 desenharPostoCombustivel(p->posX, p->posY);
             else if (p->tipo == 1)
                 desenharHelicoptero(p->posX, p->posY, helicesRotacao);
-            // else if(p->tipo == 2){
-            //     helicoptero(p->posX, p->posY);
-            // }
             else if (p->tipo == 4)
                 animacaoPostoCombustivel(p->posX, p->posY);
         }
@@ -235,8 +219,8 @@ void desenharObjetos(){
 
 // Define o que será mostrado na tela
 void display(void){
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //limpa o buffer
-    if (!fimDeJogo){ // desenha objetos na tela
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Limpa o buffer
+    if (!fimDeJogo){ // Desenha objetos na tela
 
         char msgp[32] = "POINTS: ";
         sprintf(msgp, "%s %d", msgp, aviao.pontuacao);
@@ -268,11 +252,8 @@ void display(void){
         aeronave();
 
     }
-    else{ // TELA AZUL
-
-        if (auxTempo == 1.0)
-        {            
-            //printf("fim de jogo\n");
+    else{ // Tela azul
+        if (auxTempo == 1.0){            
             inicializaAeronave();
             removerTudo(&objetos, win);
         }
@@ -284,11 +265,9 @@ void display(void){
         gameOver(-win/2, 0, msgh);
         gameOver(-win/2, 10, "GAME OVER");
         if (auxTempo < 500){
-            
             auxTempo += 1;
         }
-        else
-        {   
+        else{   
             auxTempo = 0;
             fimDeJogo = 0;
         }
@@ -296,38 +275,13 @@ void display(void){
     glutSwapBuffers();
 }
 
-// NÃO EXCLUIR - Controle extra, tá sobrando, mas vamos usar pra fazer o aviao rotacionar na movimentação
-void teclado(unsigned char key, int x, int y){
-    //anglex = acionarLetra(key, anglex);
-    switch (key)
-    {
-    case '8':
-        aviao.rotY -= 5;
-        break;
-    case '2':
-        aviao.rotY += 5;
-        break;
-    case '4':
-        aviao.rotX -= 5;
-        break;
-    case '6':
-        aviao.rotX += 5;
-        break;
-    default:
-        break;
-    }
-    glutPostRedisplay();
-}
-
 // Adiciona um tiro no vetor de tiros e seta a posição inicial dele
 void controleTiros(){
     if (timerTiro < 1){
-    aviao.tiros[contTiro].x = aviao.x;    //mesmo x da da posição do aviao quando ele atirou
-    aviao.tiros[contTiro].y = -win + 3.0; //pra sair da beira do aviao
-    ////printf("%d: %f\n",contTiro, aviao.x );
-    //aviao.tiros[contTiro].naTela = 1;
-    contTiro = (contTiro + 1) % NUM_TIROS; //troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
-                                           //com % 10 eles somem no meio da tela
+    aviao.tiros[contTiro].x = aviao.x;     // Mesmo x da da posição do aviao quando ele atirou
+    aviao.tiros[contTiro].y = -win + 3.0;  // pra sair da beira do aviao
+    contTiro = (contTiro + 1) % NUM_TIROS; // Troca de 10 para 30 porque se dermos tiros consecutivos sem parar porque
+                                           // com % 10 eles somem no meio da tela
     timerTiro = intervaloTiro;
     }
     tiro = 1;
@@ -335,15 +289,10 @@ void controleTiros(){
 
 // Controle das setas
 void controle(int key, int xx, int yy){
-
-    //controleSetas(key, aviao);
     switch (key)
     {
     case GLUT_KEY_UP:
         controleTiros();
-        break;
-    case GLUT_KEY_DOWN:
-        //rY += 5;
         break;
     case GLUT_KEY_LEFT:
         if (aviao.x - 4 <= -win + width_wall + 0.5){
@@ -355,21 +304,21 @@ void controle(int key, int xx, int yy){
             }
         }
         else{
-            aviao.x -= 1.3; //movimenta o aviao para a esquerda
+            aviao.x -= 1.3; // Movimenta o aviao para a esquerda
             aviao.rotX = aviao.rotX-3.5 <= -28 ? -28: aviao.rotX-3.5;
         }
         break;
     case GLUT_KEY_RIGHT:
         if (aviao.x + 4 >= win - width_wall - 0.5){
             vidas -= 1; warning = 8; tempoNivel = 0;
-            if(vidas < 1){ fimDeJogo = 1; }// Jogo acaba se sim
+            if(vidas < 1){ fimDeJogo = 1; } // Jogo acaba se sim
             else{ 
                 aviao.combustivel = 30;
                 aviao.x -= 4.0;
             }
         }
         else{
-            aviao.x += 1.3; //movimenta o aviao para a direita
+            aviao.x += 1.3; // Movimenta o aviao para a direita
             aviao.rotX = aviao.rotX+3.5 >= 28 ? 28: aviao.rotX+3.5;
         }
         break;
@@ -389,11 +338,6 @@ void criarObjetosSecundarios(){
         inserir(&objetos, win, win - 2.0, 0, width_wall);
         tempoAuxComb = 0;
     }
-
-    // if (tempoAuxHelicoptero == horaDoHelicoptero){
-    //     inserir(&objetos, win, win - 2.0, 2, width_wall);
-    //     tempoAuxHelicoptero =- intervaloEntreHelicopteros;
-    // }
 }
 
 // Movimenta para baixo os objetos que não foram atingidos
@@ -448,7 +392,6 @@ void movimentarObjetosSecundarios(){
 }
 
 // Executa a cada 10ms inicialmente, cria e movimenta os objetos, além de verificar a colisão
-// TO DO: fazer variar o tempo de acordo com o nivel que o jogador está
 void movimentarPorTempo(){
     if(warning > 0) warning -= 1;
     if (levelClearedMessage > 0) levelClearedMessage -= 1;
@@ -501,7 +444,6 @@ void movimentarPorTempo(){
             }
             scenicMove = (scenicMove + 0.2);
             if(scenicMove>(win*1.25)) scenicMove = -win*1.25;    
-            if(tempoNivel%25 == 0) printf("tempo: %d - horaDoHelicoptero: %d - horaDoCombustivel: %d - auxComb %d \n", tempoAuxHelicoptero, horaDoHelicoptero, horaDoCombustivel, tempoAuxComb);
         }
         tempoNivel += 1;
         if ((tempoNivel%(750+(nivel*25)))==0){
@@ -529,13 +471,14 @@ int main(int argc, char **argv){
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-  int i, msg_submenu, color_submenu;
+    int i, msg_submenu, color_submenu;
 
-  for (i = 1; i < argc; i++) {
-    if (!strcmp(argv[i], "-mono")) {
-      font = GLUT_BITMAP_9_BY_15;
+    for (i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-mono")) {
+        font = GLUT_BITMAP_9_BY_15;
+        }
     }
-  }
+
     glutInitWindowSize(janelaX, janelaY);
     glutInitWindowPosition(300, 100);
     glutCreateWindow("River Raid 3D");
@@ -543,11 +486,6 @@ int main(int argc, char **argv){
 
     CarregaTextura("grama.bmp", texture_id1);
     CarregaTextura("agua.bmp", texture_id2);
-
-    /*SetupRC();
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);*/
-
 
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
@@ -562,11 +500,7 @@ int main(int argc, char **argv){
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glPopMatrix();
 
-    
-
-
     glutDisplayFunc(display);
-    glutKeyboardFunc(teclado);
     glutSpecialFunc(controle);
     glutTimerFunc(tempoRolagem, movimentarPorTempo, 1);
     glutMainLoop();

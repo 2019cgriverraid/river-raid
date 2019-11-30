@@ -1,7 +1,3 @@
-/* Iluminacao.c
- Iluminao de um bule com textura. Com o boto do meio do mouse  possvel escolher o tipo de mapeamento de textura desejada.
-*/
-
 #include <stdio.h>
 #include <GL/glut.h>
 #include <stdlib.h>
@@ -66,7 +62,7 @@ void getBitmapImageData( char *pFileName, BMPImage *pImage )
 	//
 
 	char charTemp;
-    for( i = 0; i < nTotalImagesize; i += 3 )
+  for( i = 0; i < nTotalImagesize; i += 3 )
 	{
 		charTemp = pImage->data[i];
 		pImage->data[i] = pImage->data[i+2];
