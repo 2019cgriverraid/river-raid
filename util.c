@@ -119,7 +119,7 @@ void remover(Lista *lista, GLfloat posX, int winY){
     if (lista->inicio != NULL){
         Objeto *p = lista->inicio;
         while (p != NULL){ // Procura o objeto para remoção
-            if ((p->posX == posX) && (p->posY == winY+LIXO){
+            if ((p->posX == posX) && (p->posY == winY+LIXO)){
                 printf("remover %2f %2f \n", posX, p->posX);
                 if (p->ant != NULL){
                     p->ant->prox = p->prox;
@@ -142,7 +142,6 @@ void remover(Lista *lista, GLfloat posX, int winY){
             p = p->prox;
         }
     }
-    
 }
 
 void removerTudo(Lista *lista, int winY){
