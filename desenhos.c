@@ -403,4 +403,3 @@ void desenharHelicoptero(GLfloat tX, GLfloat tY, int i){
         helicoptero(tX, tY, 0.0, 0.0, i);
     glPopMatrix();
 }
-
