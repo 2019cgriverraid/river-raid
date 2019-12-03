@@ -125,7 +125,8 @@ void init(void){
 void aeronave(){
     glPushMatrix();
         glTranslatef(aviao.x, aviao.y, 3.0); // Leva o aviao para baixo na tela
-        if(warning > 0) desenhaAeronaveVermelha();
+        glRotatef(aviao.rotX, 0, 1, 0);  
+        if(warning > 0)desenhaAeronaveVermelha();
         else desenhaAeronave();
         
     glPopMatrix();
