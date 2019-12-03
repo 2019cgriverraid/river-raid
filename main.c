@@ -124,7 +124,7 @@ void init(void){
 // Desenha aviao e tiros
 void aeronave(){
     glPushMatrix();
-        glTranslatef(aviao.x, aviao.y, 0.0); // Leva o aviao para baixo na tela
+        glTranslatef(aviao.x, aviao.y, 3.0); // Leva o aviao para baixo na tela
         if(warning > 0) desenhaAeronaveVermelha();
         else desenhaAeronave();
         
